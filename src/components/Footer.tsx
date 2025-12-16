@@ -2,18 +2,18 @@ import { Shield, Linkedin, Mail } from "lucide-react";
 
 export const Footer = () => {
   return (
-    <footer className="bg-primary py-16">
+    <footer className="bg-muted/50 py-16 border-t border-border">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="p-2 rounded-lg bg-accent">
-                <Shield className="h-6 w-6 text-accent-foreground" />
+              <div className="p-2 rounded-lg bg-primary">
+                <Shield className="h-6 w-6 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold text-primary-foreground">Legum</span>
+              <span className="text-xl font-bold text-foreground">Legum</span>
             </div>
-            <p className="text-primary-foreground/70 max-w-md mb-6">
+            <p className="text-muted-foreground max-w-md mb-6">
               Your Compliance Partner for the Digital Age. Traditional compliance & Web3 regulatory 
               solutions — accessible, affordable, and achievable.
             </p>
@@ -22,22 +22,22 @@ export const Footer = () => {
                 href="https://linkedin.com/company/legum-limited"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center hover:bg-accent transition-colors group"
+                className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors group"
               >
-                <Linkedin className="h-5 w-5 text-primary-foreground group-hover:text-accent-foreground" />
+                <Linkedin className="h-5 w-5 text-primary group-hover:text-primary-foreground" />
               </a>
               <a
                 href="mailto:compliance@legum.com.ng"
-                className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center hover:bg-accent transition-colors group"
+                className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors group"
               >
-                <Mail className="h-5 w-5 text-primary-foreground group-hover:text-accent-foreground" />
+                <Mail className="h-5 w-5 text-primary group-hover:text-primary-foreground" />
               </a>
             </div>
           </div>
 
           {/* Services */}
           <div>
-            <h4 className="text-primary-foreground font-semibold mb-4">Services</h4>
+            <h4 className="text-foreground font-semibold mb-4">Services</h4>
             <ul className="space-y-3">
               {[
                 "ISO 27001 Certification",
@@ -48,7 +48,7 @@ export const Footer = () => {
                 "VASP Registration",
               ].map((item) => (
                 <li key={item}>
-                  <a href="#services" className="text-primary-foreground/60 hover:text-accent transition-colors">
+                  <a href="#services" className="text-muted-foreground hover:text-primary transition-colors">
                     {item}
                   </a>
                 </li>
@@ -58,7 +58,7 @@ export const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-primary-foreground font-semibold mb-4">Quick Links</h4>
+            <h4 className="text-foreground font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-3">
               {[
                 { label: "About Us", href: "#why-legum" },
@@ -68,7 +68,7 @@ export const Footer = () => {
                 { label: "Contact", href: "#contact" },
               ].map((item) => (
                 <li key={item.label}>
-                  <a href={item.href} className="text-primary-foreground/60 hover:text-accent transition-colors">
+                  <a href={item.href} className="text-muted-foreground hover:text-primary transition-colors">
                     {item.label}
                   </a>
                 </li>
@@ -78,11 +78,11 @@ export const Footer = () => {
         </div>
 
         {/* Bottom */}
-        <div className="pt-8 border-t border-primary-foreground/10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-primary-foreground/50 text-sm">
+        <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-muted-foreground text-sm">
             © {new Date().getFullYear()} Legum Limited. All rights reserved.
           </p>
-          <p className="text-primary-foreground/50 text-sm">
+          <p className="text-muted-foreground text-sm">
             No. 5 Kwaji Close, Maitama, Abuja, Nigeria
           </p>
         </div>

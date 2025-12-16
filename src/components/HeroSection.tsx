@@ -1,38 +1,32 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Shield, Globe, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroBg from "@/assets/hero-bg.jpg";
 
 export const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-hero-gradient">
-      {/* Background Image Overlay */}
-      <div 
-        className="absolute inset-0 opacity-30"
-        style={{
-          backgroundImage: `url(${heroBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/50 to-primary" />
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-background">
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--primary)) 1px, transparent 0)`,
+          backgroundSize: '40px 40px'
+        }} />
+      </div>
       
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
           animate={{ 
             scale: [1, 1.2, 1],
-            opacity: [0.1, 0.2, 0.1] 
+            opacity: [0.05, 0.1, 0.05] 
           }}
           transition={{ duration: 8, repeat: Infinity }}
-          className="absolute -top-1/4 -right-1/4 w-1/2 h-1/2 bg-accent/20 rounded-full blur-3xl"
+          className="absolute -top-1/4 -right-1/4 w-1/2 h-1/2 bg-primary/20 rounded-full blur-3xl"
         />
         <motion.div
           animate={{ 
             scale: [1.2, 1, 1.2],
-            opacity: [0.1, 0.15, 0.1] 
+            opacity: [0.05, 0.08, 0.05] 
           }}
           transition={{ duration: 10, repeat: Infinity }}
           className="absolute -bottom-1/4 -left-1/4 w-1/2 h-1/2 bg-accent/10 rounded-full blur-3xl"
@@ -46,10 +40,10 @@ export const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-accent/20 backdrop-blur-sm rounded-full border border-accent/30 mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 backdrop-blur-sm rounded-full border border-primary/20 mb-8"
           >
-            <Shield className="h-4 w-4 text-accent" />
-            <span className="text-sm font-medium text-accent">Trusted Compliance Partner</span>
+            <Shield className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium text-primary">Trusted Compliance Partner</span>
           </motion.div>
 
           {/* Main Headline */}
@@ -57,7 +51,7 @@ export const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-primary-foreground leading-tight mb-6"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-foreground leading-tight mb-6"
           >
             Your Compliance Partner
             <br />
@@ -69,7 +63,7 @@ export const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg md:text-xl text-primary-foreground/70 max-w-2xl mx-auto mb-10"
+            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
           >
             Traditional compliance & Web3 regulatory solutions. ISO 27001, SOC 2, GDPR, MiCA — 
             we make it accessible, affordable, and achievable for African businesses going global.
@@ -82,13 +76,13 @@ export const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
           >
-            <Button variant="hero" size="lg" asChild>
+            <Button size="lg" asChild>
               <a href="#contact" className="group">
                 Start Free Assessment
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </a>
             </Button>
-            <Button variant="heroOutline" size="lg" asChild>
+            <Button variant="outline" size="lg" asChild>
               <a href="#services">Explore Services</a>
             </Button>
           </motion.div>
@@ -113,8 +107,8 @@ export const HeroSection = () => {
                 transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
                 className="text-center p-4"
               >
-                <div className="text-3xl md:text-4xl font-bold text-accent mb-1">{stat.label}</div>
-                <div className="text-sm text-primary-foreground/60">{stat.sublabel}</div>
+                <div className="text-3xl md:text-4xl font-bold text-primary mb-1">{stat.label}</div>
+                <div className="text-sm text-muted-foreground">{stat.sublabel}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -126,7 +120,7 @@ export const HeroSection = () => {
         <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
           <path
             d="M0 120L48 110C96 100 192 80 288 70C384 60 480 60 576 65C672 70 768 80 864 85C960 90 1056 90 1152 85C1248 80 1344 70 1392 65L1440 60V120H1392C1344 120 1248 120 1152 120C1056 120 960 120 864 120C768 120 672 120 576 120C480 120 384 120 288 120C192 120 96 120 48 120H0Z"
-            fill="hsl(var(--background))"
+            fill="hsl(var(--muted))"
           />
         </svg>
       </div>
