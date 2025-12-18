@@ -1,4 +1,5 @@
-import { Shield, Linkedin, Mail } from "lucide-react";
+import { Linkedin, Mail } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 export const Footer = () => {
   return (
@@ -8,9 +9,7 @@ export const Footer = () => {
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="p-2 rounded-lg bg-primary">
-                <Shield className="h-6 w-6 text-primary-foreground" />
-              </div>
+              <img src={logo} alt="Legum Logo" className="h-10 w-10" />
               <span className="text-xl font-bold text-foreground">Legum</span>
             </div>
             <p className="text-muted-foreground max-w-md mb-6">
