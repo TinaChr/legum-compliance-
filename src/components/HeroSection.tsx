@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Shield, Globe, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.png";
 
 export const HeroSection = () => {
   return (
@@ -42,7 +43,7 @@ export const HeroSection = () => {
             transition={{ duration: 0.6 }}
             className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 backdrop-blur-sm rounded-full border border-primary/20 mb-8"
           >
-            <Shield className="h-4 w-4 text-primary" />
+            <img src={logo} alt="Legum Logo" className="h-4 w-4" />
             <span className="text-sm font-medium text-primary">Trusted Compliance Partner</span>
           </motion.div>
 
