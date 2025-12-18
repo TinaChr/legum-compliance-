@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Shield } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.png";
 
 const navLinks = [
   { name: "Services", href: "#services" },
@@ -38,10 +39,8 @@ export const Navbar = () => {
         <nav className="flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2 group">
-            <div className={`p-2 rounded-lg transition-colors ${isScrolled ? 'bg-accent' : 'bg-accent'}`}>
-              <Shield className="h-6 w-6 text-accent-foreground" />
-            </div>
-            <span className={`text-xl font-bold transition-colors ${isScrolled ? 'text-foreground' : 'text-primary-foreground'}`}>
+            <img src={logo} alt="Legum Logo" className="h-8 w-8" />
+            <span className={`text-xl font-bold transition-colors ${isScrolled ? 'text-foreground' : 'text-foreground'}`}>
               Legum
             </span>
           </a>
