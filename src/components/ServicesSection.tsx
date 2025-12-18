@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { 
   Shield, 
   Globe, 
@@ -16,31 +17,37 @@ import {
 const services = {
   traditional: [
     {
+      id: "iso-27001",
       icon: Shield,
       title: "ISO 27001",
       description: "International information security management system certification",
     },
     {
+      id: "soc-2",
       icon: FileCheck,
       title: "SOC 2 Type I & II",
       description: "US standard for security, availability, and confidentiality",
     },
     {
+      id: "gdpr-ndpr",
       icon: Lock,
       title: "GDPR & NDPR",
       description: "EU and Nigerian data protection regulation compliance",
     },
     {
+      id: "pci-dss",
       icon: Server,
       title: "PCI DSS",
       description: "Payment card industry data security standard",
     },
     {
+      id: "vapt",
       icon: Fingerprint,
       title: "VAPT",
       description: "Vulnerability assessment & penetration testing",
     },
     {
+      id: "iso-22301",
       icon: FileCheck,
       title: "ISO 22301",
       description: "Business continuity management certification",
@@ -48,31 +55,37 @@ const services = {
   ],
   web3: [
     {
+      id: "mica-readiness",
       icon: Scale,
       title: "MiCA Readiness",
       description: "EU Markets in Crypto-Assets regulation compliance",
     },
     {
+      id: "vasp-registration",
       icon: Globe,
       title: "VASP Registration",
       description: "Multi-jurisdictional licensing (UAE, Singapore, Hong Kong)",
     },
     {
+      id: "smart-contract-audits",
       icon: Blocks,
       title: "Smart Contract Audits",
       description: "Security audits for DeFi protocols and dApps",
     },
     {
+      id: "aml-kyc",
       icon: Shield,
       title: "AML/KYC Programs",
       description: "Comprehensive anti-money laundering frameworks",
     },
     {
+      id: "token-compliance",
       icon: FileCheck,
       title: "Token Compliance",
       description: "Securities law compliance and Howey Test analysis",
     },
     {
+      id: "dao-governance",
       icon: Lock,
       title: "DAO Governance",
       description: "Legal entity structuring and governance frameworks",
@@ -147,22 +160,24 @@ export const ServicesSection = () => {
               transition={{ duration: 0.4, delay: index * 0.08 }}
               className="group"
             >
-              <div className="bg-card rounded-xl p-6 h-full border border-border/50 hover:border-accent/30 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent/20 transition-colors">
-                    <service.icon className="h-6 w-6 text-accent" />
+              <Link to={`/services#${service.id}`}>
+                <div className="bg-card rounded-xl p-6 h-full border border-border/50 hover:border-accent/30 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent/20 transition-colors">
+                      <service.icon className="h-6 w-6 text-accent" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
+                        {service.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed">
+                        {service.description}
+                      </p>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-muted-foreground/50 group-hover:text-accent group-hover:translate-x-1 transition-all" />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
-                      {service.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                      {service.description}
-                    </p>
-                  </div>
-                  <ChevronRight className="h-5 w-5 text-muted-foreground/50 group-hover:text-accent group-hover:translate-x-1 transition-all" />
                 </div>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </div>
