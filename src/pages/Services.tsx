@@ -525,7 +525,7 @@ export default function Services() {
               Comprehensive Service Portfolio
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl">
-              Dual expertise in traditional compliance frameworks and cutting-edge Web3 regulatory solutions. Multi-jurisdictional coverage across North America, Europe, Asia-Pacific, and Africa.
+              Multi-jurisdictional coverage across North America, Europe, Asia-Pacific, and Africa.
             </p>
           </motion.div>
         </div>
