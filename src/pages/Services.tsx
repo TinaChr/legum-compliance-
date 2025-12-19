@@ -4,6 +4,7 @@ import { ArrowLeft, CheckCircle } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ServicesSidebar } from "@/components/ServicesSidebar";
+import { ServicesMobileNav } from "@/components/ServicesMobileNav";
 
 // Import service images
 import ismsImage from "@/assets/services/isms.jpg";
@@ -540,6 +541,9 @@ export default function Services() {
 
           {/* Service Categories */}
           <div className="flex-1 min-w-0">
+            {/* Mobile Navigation Dropdown */}
+            <ServicesMobileNav />
+            
             {serviceCategories.map((category, categoryIndex) => (
               <section 
                 key={category.id}
