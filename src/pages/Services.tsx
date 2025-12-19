@@ -583,26 +583,56 @@ export default function Services() {
                     <motion.div
                       key={service.id}
                       id={service.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className="bg-card rounded-2xl p-8 border border-border/50 hover:border-accent/30 shadow-sm hover:shadow-lg transition-all"
+                      initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                      viewport={{ once: true, margin: "-50px" }}
+                      transition={{ 
+                        duration: 0.6, 
+                        delay: index * 0.15,
+                        ease: [0.25, 0.46, 0.45, 0.94]
+                      }}
+                      whileHover={{ 
+                        y: -8,
+                        transition: { duration: 0.3, ease: "easeOut" }
+                      }}
+                      className="bg-card rounded-2xl p-8 border border-border/50 hover:border-accent/30 shadow-sm hover:shadow-xl transition-colors"
                     >
-                      <h3 className="text-xl font-bold text-foreground mb-3">
+                      <motion.h3 
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: index * 0.15 + 0.2 }}
+                        className="text-xl font-bold text-foreground mb-3"
+                      >
                         {service.title}
-                      </h3>
+                      </motion.h3>
                       {service.description && (
-                        <p className="text-muted-foreground mb-4">
+                        <motion.p 
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.4, delay: index * 0.15 + 0.3 }}
+                          className="text-muted-foreground mb-4"
+                        >
                           {service.description}
-                        </p>
+                        </motion.p>
                       )}
                       <ul className="space-y-3">
                         {service.details.map((detail, i) => (
-                          <li key={i} className="flex items-start gap-3">
+                          <motion.li 
+                            key={i} 
+                            initial={{ opacity: 0, x: -10 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ 
+                              duration: 0.4, 
+                              delay: index * 0.15 + 0.4 + i * 0.08 
+                            }}
+                            className="flex items-start gap-3"
+                          >
                             <CheckCircle className="h-5 w-5 text-accent shrink-0 mt-0.5" />
                             <span className="text-muted-foreground">{detail}</span>
-                          </li>
+                          </motion.li>
                         ))}
                       </ul>
                     </motion.div>
