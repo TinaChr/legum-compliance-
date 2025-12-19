@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { ServicesSidebar } from "@/components/ServicesSidebar";
 
 // Import service images
 import ismsImage from "@/assets/services/isms.jpg";
@@ -529,75 +530,85 @@ export default function Services() {
         </div>
       </section>
 
-      {/* Service Categories */}
-      {serviceCategories.map((category, categoryIndex) => (
-        <section 
-          key={category.id}
-          id={category.id}
-          className={`py-20 ${categoryIndex % 2 === 1 ? 'bg-muted/30' : ''}`}
-        >
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="mb-12"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-                {category.title}
-              </h2>
-            </motion.div>
+      {/* Main Content with Sidebar */}
+      <div className="container mx-auto px-4 relative">
+        <div className="flex gap-8">
+          {/* Sticky Sidebar */}
+          <aside className="hidden xl:block w-64 shrink-0">
+            <ServicesSidebar />
+          </aside>
 
-            {/* Category Image */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="mb-12 rounded-2xl overflow-hidden shadow-lg"
-            >
-              <img 
-                src={category.image} 
-                alt={category.title}
-                className="w-full h-auto object-cover"
-              />
-            </motion.div>
-
-            {/* Services Grid */}
-            <div className="grid md:grid-cols-2 gap-8">
-              {category.services.map((service, index) => (
+          {/* Service Categories */}
+          <div className="flex-1 min-w-0">
+            {serviceCategories.map((category, categoryIndex) => (
+              <section 
+                key={category.id}
+                id={category.id}
+                className={`py-20 ${categoryIndex % 2 === 1 ? 'bg-muted/30 -mx-4 px-4 xl:-mx-8 xl:px-8 rounded-2xl' : ''}`}
+              >
                 <motion.div
-                  key={service.id}
-                  id={service.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-card rounded-2xl p-8 border border-border/50 hover:border-accent/30 shadow-sm hover:shadow-lg transition-all"
+                  transition={{ duration: 0.6 }}
+                  className="mb-12"
                 >
-                  <h3 className="text-xl font-bold text-foreground mb-3">
-                    {service.title}
-                  </h3>
-                  {service.description && (
-                    <p className="text-muted-foreground mb-4">
-                      {service.description}
-                    </p>
-                  )}
-                  <ul className="space-y-3">
-                    {service.details.map((detail, i) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <CheckCircle className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                        <span className="text-muted-foreground">{detail}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+                    {category.title}
+                  </h2>
                 </motion.div>
-              ))}
-            </div>
+
+                {/* Category Image */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                  className="mb-12 rounded-2xl overflow-hidden shadow-lg"
+                >
+                  <img 
+                    src={category.image} 
+                    alt={category.title}
+                    className="w-full h-auto object-cover"
+                  />
+                </motion.div>
+
+                {/* Services Grid */}
+                <div className="grid md:grid-cols-2 gap-8">
+                  {category.services.map((service, index) => (
+                    <motion.div
+                      key={service.id}
+                      id={service.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="bg-card rounded-2xl p-8 border border-border/50 hover:border-accent/30 shadow-sm hover:shadow-lg transition-all"
+                    >
+                      <h3 className="text-xl font-bold text-foreground mb-3">
+                        {service.title}
+                      </h3>
+                      {service.description && (
+                        <p className="text-muted-foreground mb-4">
+                          {service.description}
+                        </p>
+                      )}
+                      <ul className="space-y-3">
+                        {service.details.map((detail, i) => (
+                          <li key={i} className="flex items-start gap-3">
+                            <CheckCircle className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                            <span className="text-muted-foreground">{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </motion.div>
+                  ))}
+                </div>
+              </section>
+            ))}
           </div>
-        </section>
-      ))}
+        </div>
+      </div>
 
       <Footer />
     </div>
