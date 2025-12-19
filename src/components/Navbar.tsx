@@ -10,7 +10,7 @@ const navLinks = [
   { name: "Why Legum", href: "#why-legum", isPage: false },
   { name: "Packages", href: "#packages", isPage: false },
   { name: "FAQ", href: "#faq", isPage: false },
-  { name: "Contact", href: "#contact", isPage: false },
+  { name: "Contact", href: "/contact", isPage: true },
 ];
 
 export const Navbar = () => {
@@ -76,7 +76,7 @@ export const Navbar = () => {
           {/* CTA Button */}
           <div className="hidden lg:block">
             <Button variant={isScrolled ? "hero" : "heroOutline"} size="default" asChild>
-              <a href="#contact">Get Started</a>
+              <Link to="/contact">Get Started</Link>
             </Button>
           </div>
 
@@ -126,9 +126,9 @@ export const Navbar = () => {
                   )
                 ))}
                 <Button variant="hero" size="default" asChild>
-                  <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
                     Get Started
-                  </a>
+                  </Link>
                 </Button>
               </div>
             </motion.div>

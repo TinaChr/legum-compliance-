@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { ServiceContactForm } from "@/components/ServiceContactForm";
 
 // Import service images
 import ismsImage from "@/assets/services/isms.jpg";
@@ -599,32 +598,6 @@ export default function Services() {
           </div>
         </section>
       ))}
-
-      {/* Contact Form Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto"
-          >
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Get Started with Your Compliance Journey
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                Tell us about your compliance needs and we'll get back to you with a tailored solution.
-              </p>
-            </div>
-            
-            <div className="bg-card rounded-2xl p-8 md:p-10 border border-border/50 shadow-lg">
-              <ServiceContactForm />
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       <Footer />
     </div>
