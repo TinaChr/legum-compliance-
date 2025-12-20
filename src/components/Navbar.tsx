@@ -7,6 +7,7 @@ import logo from "@/assets/logo.png";
 
 const navLinks = [
   { name: "Services", href: "/services", isPage: true },
+  { name: "Documents", href: "/documents", isPage: true },
   { name: "Why Legum", href: "#why-legum", isPage: false },
   { name: "Packages", href: "#packages", isPage: false },
   { name: "FAQ", href: "#faq", isPage: false },
