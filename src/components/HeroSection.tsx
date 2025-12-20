@@ -78,7 +78,7 @@ export const HeroSection = () => {
             className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
           >
             <Button size="lg" asChild>
-              <a href="#contact" className="group">
+              <a href="https://calendly.com/chioma-legum/30min" target="_blank" rel="noopener noreferrer" className="group">
                 Start Free Assessment
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </a>
