@@ -53,7 +53,7 @@ export const ContactSection = () => {
             </div>
 
             <Button variant="hero" size="lg" className="group" asChild>
-              <a href="mailto:compliance@legum.com.ng">
+              <a href="https://calendly.com/chioma-legum/30min" target="_blank" rel="noopener noreferrer">
                 Start Free Assessment
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </a>
