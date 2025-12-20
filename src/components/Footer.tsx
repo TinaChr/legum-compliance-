@@ -13,8 +13,7 @@ export const Footer = () => {
               <span className="text-xl font-bold text-foreground">Legum</span>
             </div>
             <p className="text-muted-foreground mb-6">
-              Your Compliance Partner for the Digital Age. Traditional compliance & Web3 regulatory 
-              solutions — accessible, affordable, and achievable.
+              Your Compliance Partner for the Digital Age.
             </p>
             <div className="flex items-center gap-4">
               <a
