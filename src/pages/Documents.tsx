@@ -1,11 +1,14 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowLeft, FileText, Download, ShoppingCart, CheckCircle } from "lucide-react";
+import { ArrowLeft, FileText, ShoppingCart, CheckCircle, Plus } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CartDrawer } from "@/components/CartDrawer";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "sonner";
 
 const documentCategories = [
   {
@@ -119,6 +122,15 @@ const documentCategories = [
 ];
 
 const Documents = () => {
+  const { addItem, items } = useCart();
+
+  const handleAddToCart = (doc: { id: string; title: string; price: number }) => {
+    addItem({ id: doc.id, title: doc.title, price: doc.price });
+    toast.success(`${doc.title} added to cart`);
+  };
+
+  const isInCart = (id: string) => items.some((item) => item.id === id);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -133,13 +145,16 @@ const Documents = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Link
-              to="/"
-              className="inline-flex items-center gap-2 text-blue-300 hover:text-white transition-colors mb-8"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Home
-            </Link>
+            <div className="flex items-center justify-between mb-8">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 text-blue-300 hover:text-white transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to Home
+              </Link>
+              <CartDrawer />
+            </div>
             
             <div className="max-w-3xl">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
@@ -203,11 +218,22 @@ const Documents = () => {
                         </ul>
                       </CardContent>
                       <CardFooter className="pt-4 border-t border-border/50">
-                        <Button className="w-full gap-2" asChild>
-                          <Link to="/contact">
-                            <ShoppingCart className="w-4 h-4" />
-                            Purchase Now
-                          </Link>
+                        <Button 
+                          className="w-full gap-2" 
+                          variant={isInCart(doc.id) ? "secondary" : "default"}
+                          onClick={() => handleAddToCart(doc)}
+                        >
+                          {isInCart(doc.id) ? (
+                            <>
+                              <CheckCircle className="w-4 h-4" />
+                              Added to Cart
+                            </>
+                          ) : (
+                            <>
+                              <Plus className="w-4 h-4" />
+                              Add to Cart
+                            </>
+                          )}
                         </Button>
                       </CardFooter>
                     </Card>
