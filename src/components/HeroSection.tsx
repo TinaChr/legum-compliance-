@@ -66,8 +66,7 @@ export const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
           >
-            Traditional compliance & Web3 regulatory solutions. ISO 27001, SOC 2, GDPR, MiCA — 
-            we make it accessible, affordable, and achievable for African businesses going global.
+            ISO 27001, SOC 2, GDPR, MiCA — we make it accessible, affordable, and achievable for African businesses going global.
           </motion.p>
 
           {/* CTA Buttons */}
