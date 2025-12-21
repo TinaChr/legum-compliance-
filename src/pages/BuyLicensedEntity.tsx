@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/hooks/use-toast";
 import { 
   Building2, 
   Globe, 
@@ -329,10 +332,211 @@ const categories = [
   "MiCA Readiness"
 ];
 
+// Buyer Form Component
+function BuyerForm() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    company: "",
+    jurisdiction: "",
+    licenseType: "",
+    message: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulate form submission
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    toast({
+      title: "Inquiry Submitted",
+      description: "Thank you for your interest. Our team will contact you shortly.",
+    });
+    
+    setFormData({ name: "", email: "", company: "", jurisdiction: "", licenseType: "", message: "" });
+    setIsSubmitting(false);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="buyer-name">Full Name *</Label>
+          <Input
+            id="buyer-name"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            required
+            placeholder="John Doe"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="buyer-email">Email *</Label>
+          <Input
+            id="buyer-email"
+            type="email"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            required
+            placeholder="john@company.com"
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="buyer-company">Company</Label>
+          <Input
+            id="buyer-company"
+            value={formData.company}
+            onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+            placeholder="Company Name"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="buyer-jurisdiction">Preferred Jurisdiction</Label>
+          <Input
+            id="buyer-jurisdiction"
+            value={formData.jurisdiction}
+            onChange={(e) => setFormData({ ...formData, jurisdiction: e.target.value })}
+            placeholder="e.g., UAE, Singapore, EU"
+          />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="buyer-license">License Type of Interest</Label>
+        <Input
+          id="buyer-license"
+          value={formData.licenseType}
+          onChange={(e) => setFormData({ ...formData, licenseType: e.target.value })}
+          placeholder="e.g., VASP, EMI, MSB"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="buyer-message">Additional Details</Label>
+        <Textarea
+          id="buyer-message"
+          value={formData.message}
+          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+          placeholder="Tell us about your requirements, timeline, and any specific preferences..."
+          rows={3}
+        />
+      </div>
+      <input type="hidden" name="interest" value="buyer" />
+      <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+        {isSubmitting ? "Submitting..." : "Submit Inquiry"}
+        {!isSubmitting && <ArrowRight className="ml-2 h-4 w-4" />}
+      </Button>
+    </form>
+  );
+}
+
+// Seller Form Component
+function SellerForm() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    company: "",
+    entityType: "",
+    jurisdiction: "",
+    message: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulate form submission
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    toast({
+      title: "Inquiry Submitted",
+      description: "Thank you for reaching out. Our team will contact you shortly.",
+    });
+    
+    setFormData({ name: "", email: "", company: "", entityType: "", jurisdiction: "", message: "" });
+    setIsSubmitting(false);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="seller-name">Full Name *</Label>
+          <Input
+            id="seller-name"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            required
+            placeholder="John Doe"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="seller-email">Email *</Label>
+          <Input
+            id="seller-email"
+            type="email"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            required
+            placeholder="john@company.com"
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="seller-company">Company / Entity Name</Label>
+          <Input
+            id="seller-company"
+            value={formData.company}
+            onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+            placeholder="Entity Name"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="seller-jurisdiction">Entity Jurisdiction</Label>
+          <Input
+            id="seller-jurisdiction"
+            value={formData.jurisdiction}
+            onChange={(e) => setFormData({ ...formData, jurisdiction: e.target.value })}
+            placeholder="e.g., UAE, Singapore, EU"
+          />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="seller-type">Entity / License Type</Label>
+        <Input
+          id="seller-type"
+          value={formData.entityType}
+          onChange={(e) => setFormData({ ...formData, entityType: e.target.value })}
+          placeholder="e.g., VASP, EMI, Foundation"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="seller-message">Entity Details</Label>
+        <Textarea
+          id="seller-message"
+          value={formData.message}
+          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+          placeholder="Describe your entity, its history, operational status, and reason for selling..."
+          rows={3}
+        />
+      </div>
+      <input type="hidden" name="interest" value="seller" />
+      <Button type="submit" className="w-full" variant="outline" size="lg" disabled={isSubmitting}>
+        {isSubmitting ? "Submitting..." : "Submit Listing Inquiry"}
+        {!isSubmitting && <ArrowRight className="ml-2 h-4 w-4" />}
+      </Button>
+    </form>
+  );
+}
+
 export default function BuyLicensedEntity() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-
   const filteredEntities = licensedEntities.filter((entity) => {
     const matchesSearch = 
       entity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -666,40 +870,12 @@ export default function BuyLicensedEntity() {
                   <div className="p-3 rounded-lg bg-primary/10">
                     <Building2 className="h-8 w-8 text-primary" />
                   </div>
-                  <h3 className="text-2xl font-bold text-foreground">For Buyers</h3>
+                  <h3 className="text-2xl font-bold text-foreground">I Want to Buy</h3>
                 </div>
-                <ul className="space-y-4">
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    <span className="text-foreground/90">Access to verified licensed entities across 15+ jurisdictions</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    <span className="text-foreground/90">Comprehensive due diligence support and documentation</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    <span className="text-foreground/90">Transaction structuring and legal advisory</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    <span className="text-foreground/90">Regulatory approval navigation and change of control filings</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    <span className="text-foreground/90">Post-acquisition compliance and operational setup</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    <span className="text-foreground/90">Banking relationship introductions and onboarding support</span>
-                  </li>
-                </ul>
-                <Button className="mt-8 w-full" size="lg" asChild>
-                  <Link to="/contact?type=buyer">
-                    I Want to Buy
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
+                <p className="text-muted-foreground mb-6">
+                  Interested in acquiring a licensed entity? Fill out the form below and our team will get back to you.
+                </p>
+                <BuyerForm />
               </Card>
             </motion.div>
 
@@ -715,40 +891,12 @@ export default function BuyLicensedEntity() {
                   <div className="p-3 rounded-lg bg-accent/10">
                     <Globe className="h-8 w-8 text-accent" />
                   </div>
-                  <h3 className="text-2xl font-bold text-foreground">For Sellers</h3>
+                  <h3 className="text-2xl font-bold text-foreground">I Want to Sell</h3>
                 </div>
-                <ul className="space-y-4">
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                    <span className="text-foreground/90">Confidential listing and qualified buyer matching</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                    <span className="text-foreground/90">Professional valuation and pricing guidance</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                    <span className="text-foreground/90">Transaction documentation and escrow management</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                    <span className="text-foreground/90">Regulatory notification and approval coordination</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                    <span className="text-foreground/90">Clean exit strategy and liability management</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                    <span className="text-foreground/90">Access to our global network of qualified buyers</span>
-                  </li>
-                </ul>
-                <Button className="mt-8 w-full" variant="outline" size="lg" asChild>
-                  <Link to="/contact?type=seller">
-                    I Want to Sell
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
+                <p className="text-muted-foreground mb-6">
+                  Looking to sell your licensed entity? Tell us about it and we'll connect you with qualified buyers.
+                </p>
+                <SellerForm />
               </Card>
             </motion.div>
           </div>
