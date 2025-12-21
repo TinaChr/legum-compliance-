@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Shield, Globe, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
 
 export const HeroSection = () => {
@@ -77,10 +78,10 @@ export const HeroSection = () => {
             className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
           >
             <Button size="lg" asChild>
-              <a href="https://calendly.com/chioma-legum/30min" target="_blank" rel="noopener noreferrer" className="group">
-                Start Free Assessment
+              <Link to="/contact" className="group">
+                Get Started
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </a>
+              </Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
               <a href="#services">Explore Services</a>
