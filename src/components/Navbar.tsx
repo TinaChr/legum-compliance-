@@ -77,7 +77,7 @@ export const Navbar = () => {
           {/* CTA Button */}
           <div className="hidden lg:block">
             <Button variant={isScrolled ? "hero" : "heroOutline"} size="default" asChild>
-              <Link to="/contact">Get Started</Link>
+              <Link to="/buy-licensed-entity">Buy Licensed Entity</Link>
             </Button>
           </div>
 
@@ -127,8 +127,8 @@ export const Navbar = () => {
                   )
                 ))}
                 <Button variant="hero" size="default" asChild>
-                  <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
-                    Get Started
+                  <Link to="/buy-licensed-entity" onClick={() => setIsMobileMenuOpen(false)}>
+                    Buy Licensed Entity
                   </Link>
                 </Button>
               </div>

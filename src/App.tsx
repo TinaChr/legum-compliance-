@@ -8,8 +8,8 @@ import Index from "./pages/Index";
 import Services from "./pages/Services";
 import Documents from "./pages/Documents";
 import Contact from "./pages/Contact";
+import BuyLicensedEntity from "./pages/BuyLicensedEntity";
 import NotFound from "./pages/NotFound";
-
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -24,6 +24,7 @@ const App = () => (
             <Route path="/services" element={<Services />} />
             <Route path="/documents" element={<Documents />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/buy-licensed-entity" element={<BuyLicensedEntity />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
