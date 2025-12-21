@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowLeft, FileText, ShoppingCart, CheckCircle, Plus } from "lucide-react";
+import { ArrowLeft, FileText, ShoppingCart, CheckCircle, Plus, Eye } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,16 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { CartDrawer } from "@/components/CartDrawer";
 import { useCart } from "@/contexts/CartContext";
+import { DocumentPreviewDialog } from "@/components/DocumentPreviewDialog";
 import { toast } from "sonner";
+
+interface Document {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  features: string[];
+}
 
 const documentCategories = [
   {
@@ -123,6 +133,8 @@ const documentCategories = [
 
 const Documents = () => {
   const { addItem, items } = useCart();
+  const [previewDocument, setPreviewDocument] = useState<Document | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const handleAddToCart = (doc: { id: string; title: string; price: number }) => {
     addItem({ id: doc.id, title: doc.title, price: doc.price });
@@ -130,6 +142,11 @@ const Documents = () => {
   };
 
   const isInCart = (id: string) => items.some((item) => item.id === id);
+
+  const handlePreview = (doc: Document) => {
+    setPreviewDocument(doc);
+    setPreviewOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -217,7 +234,15 @@ const Documents = () => {
                           ))}
                         </ul>
                       </CardContent>
-                      <CardFooter className="pt-4 border-t border-border/50">
+                      <CardFooter className="pt-4 border-t border-border/50 flex-col gap-2">
+                        <Button 
+                          variant="outline"
+                          className="w-full gap-2"
+                          onClick={() => handlePreview(doc)}
+                        >
+                          <Eye className="w-4 h-4" />
+                          Preview Sample
+                        </Button>
                         <Button 
                           className="w-full gap-2" 
                           variant={isInCart(doc.id) ? "secondary" : "default"}
@@ -269,6 +294,14 @@ const Documents = () => {
       </section>
 
       <Footer />
+
+      <DocumentPreviewDialog
+        open={previewOpen}
+        onOpenChange={setPreviewOpen}
+        document={previewDocument}
+        onAddToCart={() => previewDocument && handleAddToCart(previewDocument)}
+        isInCart={previewDocument ? isInCart(previewDocument.id) : false}
+      />
     </div>
   );
 };
