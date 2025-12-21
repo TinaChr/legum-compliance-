@@ -525,75 +525,399 @@ export default function BuyLicensedEntity() {
         </div>
       </section>
 
-      {/* Why Buy Licensed Entity */}
+      {/* Why Acquire Instead of Apply */}
       <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-12">
+            <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
+              Smart Investment
+            </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Why Buy a Licensed Entity?
+              Why Acquire Instead of Apply?
             </h2>
             <p className="text-muted-foreground">
-              Skip the lengthy licensing process and enter the market faster with a ready-to-operate licensed entity.
+              Acquiring a licensed entity offers significant advantages over the traditional application process.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="text-center p-6">
-              <Clock className="h-12 w-12 text-accent mx-auto mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Faster Market Entry</h3>
-              <p className="text-sm text-muted-foreground">
-                Save 6-18 months compared to new license applications
-              </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Acquire Column */}
+            <Card className="p-6 border-accent/50 bg-accent/5">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 rounded-full bg-accent/20">
+                  <CheckCircle2 className="h-6 w-6 text-accent" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground">Acquire a Licensed Entity</h3>
+              </div>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-medium text-foreground">2-12 weeks timeline</span>
+                    <p className="text-sm text-muted-foreground">Immediate market access upon transfer completion</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-medium text-foreground">Pre-approved compliance</span>
+                    <p className="text-sm text-muted-foreground">Established frameworks already vetted by regulators</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-medium text-foreground">Operational infrastructure</span>
+                    <p className="text-sm text-muted-foreground">Banking relationships, policies, and procedures in place</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-medium text-foreground">Lower regulatory risk</span>
+                    <p className="text-sm text-muted-foreground">Proven track record with the regulator</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-medium text-foreground">Predictable costs</span>
+                    <p className="text-sm text-muted-foreground">Fixed acquisition price vs uncertain application fees</p>
+                  </div>
+                </li>
+              </ul>
             </Card>
-            <Card className="text-center p-6">
-              <Shield className="h-12 w-12 text-accent mx-auto mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Proven Compliance</h3>
-              <p className="text-sm text-muted-foreground">
-                Pre-approved entities with established compliance frameworks
-              </p>
-            </Card>
-            <Card className="text-center p-6">
-              <Globe className="h-12 w-12 text-accent mx-auto mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Global Reach</h3>
-              <p className="text-sm text-muted-foreground">
-                Access to multiple jurisdictions with passporting rights
-              </p>
-            </Card>
-            <Card className="text-center p-6">
-              <FileCheck className="h-12 w-12 text-accent mx-auto mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Full Documentation</h3>
-              <p className="text-sm text-muted-foreground">
-                Complete policy frameworks and operational procedures included
-              </p>
+
+            {/* Apply Column */}
+            <Card className="p-6 border-border/50 bg-muted/20">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 rounded-full bg-muted">
+                  <Clock className="h-6 w-6 text-muted-foreground" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground">Apply for New License</h3>
+              </div>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <X className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-medium text-foreground">6-24 months timeline</span>
+                    <p className="text-sm text-muted-foreground">Lengthy regulatory review and approval process</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <X className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-medium text-foreground">Uncertain outcome</span>
+                    <p className="text-sm text-muted-foreground">No guarantee of approval after extensive effort</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <X className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-medium text-foreground">Build from scratch</span>
+                    <p className="text-sm text-muted-foreground">Must develop all policies, procedures, and relationships</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <X className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-medium text-foreground">Higher regulatory scrutiny</span>
+                    <p className="text-sm text-muted-foreground">New applicants face stricter vetting</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <X className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-medium text-foreground">Escalating costs</span>
+                    <p className="text-sm text-muted-foreground">Legal fees, consultants, and revisions add up</p>
+                  </div>
+                </li>
+              </ul>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* What We Offer */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <Card className="bg-gradient-to-br from-primary/10 to-accent/10 border-accent/20">
-            <CardContent className="p-8 md:p-12 text-center">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                Can't Find What You're Looking For?
-              </h2>
-              <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-                We have access to additional licensed entities and can help you obtain new licenses 
-                in various jurisdictions. Contact us to discuss your specific requirements.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" asChild>
-                  <Link to="/contact">
-                    Schedule Consultation
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <Badge className="mb-4 bg-accent/10 text-accent hover:bg-accent/20">
+              Our Services
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              What We Offer
+            </h2>
+            <p className="text-muted-foreground">
+              Comprehensive support for both buyers and sellers of licensed entities.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* For Buyers */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <Card className="h-full p-8 border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-3 rounded-lg bg-primary/10">
+                    <Building2 className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-foreground">For Buyers</h3>
+                </div>
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <span className="text-foreground/90">Access to verified licensed entities across 15+ jurisdictions</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <span className="text-foreground/90">Comprehensive due diligence support and documentation</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <span className="text-foreground/90">Transaction structuring and legal advisory</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <span className="text-foreground/90">Regulatory approval navigation and change of control filings</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <span className="text-foreground/90">Post-acquisition compliance and operational setup</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <span className="text-foreground/90">Banking relationship introductions and onboarding support</span>
+                  </li>
+                </ul>
+                <Button className="mt-8 w-full" size="lg" asChild>
+                  <Link to="/contact?type=buyer">
+                    I Want to Buy
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild>
-                  <Link to="/services">
-                    View Our Services
+              </Card>
+            </motion.div>
+
+            {/* For Sellers */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <Card className="h-full p-8 border-accent/30 bg-gradient-to-br from-accent/5 to-transparent">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-3 rounded-lg bg-accent/10">
+                    <Globe className="h-8 w-8 text-accent" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-foreground">For Sellers</h3>
+                </div>
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                    <span className="text-foreground/90">Confidential listing and qualified buyer matching</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                    <span className="text-foreground/90">Professional valuation and pricing guidance</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                    <span className="text-foreground/90">Transaction documentation and escrow management</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                    <span className="text-foreground/90">Regulatory notification and approval coordination</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                    <span className="text-foreground/90">Clean exit strategy and liability management</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                    <span className="text-foreground/90">Access to our global network of qualified buyers</span>
+                  </li>
+                </ul>
+                <Button className="mt-8 w-full" variant="outline" size="lg" asChild>
+                  <Link to="/contact?type=seller">
+                    I Want to Sell
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
+              </Card>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Key Jurisdictions */}
+      <section className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
+              Global Coverage
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Key Jurisdictions
+            </h2>
+            <p className="text-muted-foreground">
+              We specialize in licensed entities across the world's most important financial and crypto regulatory hubs.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {[
+              { name: "United Arab Emirates", flag: "🇦🇪", types: "VARA, ADGM" },
+              { name: "Singapore", flag: "🇸🇬", types: "MAS PSL" },
+              { name: "Hong Kong", flag: "🇭🇰", types: "SFC VASP" },
+              { name: "European Union", flag: "🇪🇺", types: "MiCA, EMI" },
+              { name: "United Kingdom", flag: "🇬🇧", types: "FCA PI" },
+              { name: "Switzerland", flag: "🇨🇭", types: "Foundations" },
+              { name: "Lithuania", flag: "🇱🇹", types: "EMI, PI" },
+              { name: "United States", flag: "🇺🇸", types: "MSB, MTL" },
+              { name: "Canada", flag: "🇨🇦", types: "MSB" },
+              { name: "Cayman Islands", flag: "🇰🇾", types: "Foundations" },
+            ].map((jurisdiction, index) => (
+              <motion.div
+                key={jurisdiction.name}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <Card className="p-4 text-center hover:shadow-md hover:border-accent/50 transition-all cursor-pointer group">
+                  <div className="text-4xl mb-2">{jurisdiction.flag}</div>
+                  <h4 className="font-medium text-sm text-foreground group-hover:text-accent transition-colors">
+                    {jurisdiction.name}
+                  </h4>
+                  <p className="text-xs text-muted-foreground mt-1">{jurisdiction.types}</p>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <Badge className="mb-4 bg-accent/10 text-accent hover:bg-accent/20">
+              Simple Process
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              How It Works
+            </h2>
+            <p className="text-muted-foreground">
+              Our streamlined acquisition process ensures a smooth and efficient transaction.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                step: "01",
+                title: "Initial Consultation",
+                description: "Discuss your requirements, target jurisdictions, and timeline. We match you with suitable entities.",
+                icon: Building2
+              },
+              {
+                step: "02",
+                title: "Due Diligence",
+                description: "Comprehensive review of entity documentation, compliance history, and regulatory standing.",
+                icon: FileCheck
+              },
+              {
+                step: "03",
+                title: "Transaction & Filing",
+                description: "Structure the deal, prepare documentation, and submit change of control applications to regulators.",
+                icon: Shield
+              },
+              {
+                step: "04",
+                title: "Transfer & Onboarding",
+                description: "Complete the transfer, update banking relationships, and hand over operational control.",
+                icon: Globe
+              }
+            ].map((item, index) => (
+              <motion.div
+                key={item.step}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+              >
+                <Card className="relative p-6 h-full border-border/50 hover:border-accent/50 transition-all group overflow-hidden">
+                  <div className="absolute top-4 right-4 text-6xl font-bold text-muted/20 group-hover:text-accent/10 transition-colors">
+                    {item.step}
+                  </div>
+                  <div className="relative z-10">
+                    <div className="p-3 rounded-lg bg-accent/10 w-fit mb-4">
+                      <item.icon className="h-6 w-6 text-accent" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">{item.title}</h3>
+                    <p className="text-sm text-muted-foreground">{item.description}</p>
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-gradient-to-br from-primary/10 via-background to-accent/10">
+        <div className="container mx-auto px-4">
+          <Card className="bg-background/80 backdrop-blur-sm border-accent/20 shadow-lg">
+            <CardContent className="p-8 md:p-12">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                    Ready to Fast-Track Your Market Entry?
+                  </h2>
+                  <p className="text-muted-foreground mb-6">
+                    Whether you're looking to buy a licensed entity or sell your existing license, 
+                    our team of regulatory experts is here to guide you through every step.
+                  </p>
+                  <ul className="space-y-2 mb-8">
+                    <li className="flex items-center gap-2 text-sm text-foreground/80">
+                      <CheckCircle2 className="h-4 w-4 text-accent" />
+                      Free initial consultation
+                    </li>
+                    <li className="flex items-center gap-2 text-sm text-foreground/80">
+                      <CheckCircle2 className="h-4 w-4 text-accent" />
+                      Confidential and secure process
+                    </li>
+                    <li className="flex items-center gap-2 text-sm text-foreground/80">
+                      <CheckCircle2 className="h-4 w-4 text-accent" />
+                      Expert regulatory guidance
+                    </li>
+                  </ul>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <Button size="lg" className="w-full text-lg py-6" asChild>
+                    <Link to="/contact">
+                      Schedule a Consultation
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                  </Button>
+                  <Button size="lg" variant="outline" className="w-full" asChild>
+                    <Link to="/services">
+                      Explore Our Services
+                    </Link>
+                  </Button>
+                  <p className="text-center text-sm text-muted-foreground">
+                    Or email us directly at{" "}
+                    <a href="mailto:info@legumcompliance.com" className="text-accent hover:underline">
+                      info@legumcompliance.com
+                    </a>
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>
