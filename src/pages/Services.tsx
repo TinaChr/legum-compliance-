@@ -646,12 +646,12 @@ export default function Services() {
                         transition={{ duration: 0.4, delay: index * 0.15 + 0.5 }}
                         className="flex flex-wrap gap-3 pt-4 border-t border-border/50"
                       >
-                        <Link to="/contact">
+                        <a href="https://calendly.com/chioma-legum/30min" target="_blank" rel="noopener noreferrer">
                           <Button variant="default" size="sm" className="gap-2">
                             <ClipboardCheck className="h-4 w-4" />
                             Start Free Assessment
                           </Button>
-                        </Link>
+                        </a>
                         {serviceToDocumentMapping[service.id] && serviceToDocumentMapping[service.id] !== "training" && (
                           <Link to={`/documents#${serviceToDocumentMapping[service.id]}`}>
                             <Button variant="outline" size="sm" className="gap-2">
