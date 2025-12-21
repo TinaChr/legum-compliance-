@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowLeft, FileText, CheckCircle, Plus, Eye, Shield, Lock, Globe, Building, AlertTriangle, Coins, Scale, Users, Leaf, GraduationCap } from "lucide-react";
+import { ArrowLeft, FileText, CheckCircle, Plus, Eye, Shield, Lock, Globe, Building, AlertTriangle, Coins, Scale, Users, Leaf, GraduationCap, Search, X } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { CartDrawer } from "@/components/CartDrawer";
 import { useCart } from "@/contexts/CartContext";
+import { Input } from "@/components/ui/input";
 import { DocumentPreviewDialog } from "@/components/DocumentPreviewDialog";
 import { toast } from "sonner";
 
@@ -652,6 +653,17 @@ const Documents = () => {
   const { addItem, items } = useCart();
   const [previewDocument, setPreviewDocument] = useState<DocumentItem | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter documents based on search query
+  const filteredCategories = documentCategories.map(category => ({
+    ...category,
+    documents: category.documents.filter(doc => 
+      doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doc.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doc.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()))
+    )
+  })).filter(category => category.documents.length > 0);
 
   const handleAddToCart = (doc: DocumentItem) => {
     addItem({ id: doc.id, title: doc.title, price: doc.price });
@@ -718,22 +730,62 @@ const Documents = () => {
         </div>
       </section>
 
+      {/* Search Bar */}
+      <section className="py-8 border-b border-border/50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-xl mx-auto relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search frameworks, policies, or features..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-12 pr-10 py-6 text-base bg-card border-border/50 focus:border-primary"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
+          </div>
+          {searchQuery && (
+            <p className="text-center text-sm text-muted-foreground mt-4">
+              Found {filteredCategories.reduce((acc, cat) => acc + cat.documents.length, 0)} documents matching "{searchQuery}"
+            </p>
+          )}
+        </div>
+      </section>
+
       {/* Documents Grid */}
       <section className="py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          {documentCategories.map((category, categoryIndex) => (
-            <motion.div
-              key={category.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
-              className="mb-20"
-            >
-              <div className="flex items-start gap-4 mb-8">
-                <div className="p-3 bg-primary/10 rounded-xl text-primary">
-                  {category.icon}
-                </div>
+          {filteredCategories.length === 0 ? (
+            <div className="text-center py-20">
+              <FileText className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-foreground mb-2">No documents found</h3>
+              <p className="text-muted-foreground mb-4">Try adjusting your search terms</p>
+              <Button variant="outline" onClick={() => setSearchQuery("")}>
+                Clear Search
+              </Button>
+            </div>
+          ) : (
+            filteredCategories.map((category, categoryIndex) => (
+              <motion.div
+                key={category.id}
+                id={category.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
+                className="mb-20"
+              >
+                <div className="flex items-start gap-4 mb-8">
+                  <div className="p-3 bg-primary/10 rounded-xl text-primary">
+                    {category.icon}
+                  </div>
                 <div>
                   <h2 className="text-2xl md:text-3xl font-bold text-foreground">
                     {category.title}
@@ -814,7 +866,8 @@ const Documents = () => {
                 ))}
               </div>
             </motion.div>
-          ))}
+          ))
+          )}
         </div>
       </section>
 
