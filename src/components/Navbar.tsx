@@ -51,7 +51,7 @@ const navLinks: NavLink[] = [
     ]
   },
   { 
-    name: "Buy Licensed Entity", 
+    name: "Get License", 
     href: "/buy-licensed-entity", 
     isPage: true,
     subItems: [
