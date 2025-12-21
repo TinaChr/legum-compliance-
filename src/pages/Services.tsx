@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowLeft, CheckCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle, FileText, ClipboardCheck } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ServicesSidebar } from "@/components/ServicesSidebar";
 import { ServicesMobileNav } from "@/components/ServicesMobileNav";
+import { Button } from "@/components/ui/button";
+import { serviceToDocumentMapping } from "@/data/serviceDocumentMapping";
 
 // Import service images
 import ismsImage from "@/assets/services/isms.jpg";
@@ -617,7 +619,7 @@ export default function Services() {
                           {service.description}
                         </motion.p>
                       )}
-                      <ul className="space-y-3">
+                      <ul className="space-y-3 mb-6">
                         {service.details.map((detail, i) => (
                           <motion.li 
                             key={i} 
@@ -635,6 +637,30 @@ export default function Services() {
                           </motion.li>
                         ))}
                       </ul>
+                      
+                      {/* Action Buttons */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: index * 0.15 + 0.5 }}
+                        className="flex flex-wrap gap-3 pt-4 border-t border-border/50"
+                      >
+                        <Link to="/contact">
+                          <Button variant="default" size="sm" className="gap-2">
+                            <ClipboardCheck className="h-4 w-4" />
+                            Start Free Assessment
+                          </Button>
+                        </Link>
+                        {serviceToDocumentMapping[service.id] && serviceToDocumentMapping[service.id] !== "training" && (
+                          <Link to={`/documents#${serviceToDocumentMapping[service.id]}`}>
+                            <Button variant="outline" size="sm" className="gap-2">
+                              <FileText className="h-4 w-4" />
+                              Purchase Documents
+                            </Button>
+                          </Link>
+                        )}
+                      </motion.div>
                     </motion.div>
                   ))}
                 </div>
