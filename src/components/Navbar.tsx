@@ -24,16 +24,11 @@ const navLinks: NavLink[] = [
     href: "/services", 
     isPage: true,
     subItems: [
-      { name: "Information Security (ISO 27001, SOC 2)", href: "/services#isms", isPage: true },
-      { name: "Data Protection & Privacy", href: "/services#data-protection", isPage: true },
-      { name: "Industry-Specific Compliance", href: "/services#industry-specific", isPage: true },
-      { name: "Cybersecurity & Technical", href: "/services#cybersecurity", isPage: true },
-      { name: "Web3 Regulatory & Licensing", href: "/services#web3-regulatory", isPage: true },
-      { name: "AML/KYC & Financial Crime", href: "/services#aml-kyc", isPage: true },
-      { name: "Token Issuance & Governance", href: "/services#token-governance", isPage: true },
-      { name: "Corporate Governance", href: "/services#corporate-governance", isPage: true },
-      { name: "ESG & Responsible Innovation", href: "/services#esg", isPage: true },
-      { name: "Training & Advisory", href: "/services#training-advisory", isPage: true },
+      { name: "VASP Registration", href: "/services", isPage: true },
+      { name: "EMI & Payment Institution", href: "/services", isPage: true },
+      { name: "MSB Registration", href: "/services", isPage: true },
+      { name: "Legal Entity Structuring", href: "/services", isPage: true },
+      { name: "MiCA Readiness", href: "/services", isPage: true },
     ]
   },
   { 
@@ -51,16 +46,9 @@ const navLinks: NavLink[] = [
     ]
   },
   { 
-    name: "Get License", 
+    name: "Buy/Sell License", 
     href: "/buy-licensed-entity", 
-    isPage: true,
-    subItems: [
-      { name: "VASP Licenses", href: "/buy-licensed-entity", isPage: true },
-      { name: "EMI & Payment Institutions", href: "/buy-licensed-entity", isPage: true },
-      { name: "MSB Registrations", href: "/buy-licensed-entity", isPage: true },
-      { name: "Legal Entity Structures", href: "/buy-licensed-entity", isPage: true },
-      { name: "MiCA Readiness", href: "/buy-licensed-entity", isPage: true },
-    ]
+    isPage: true
   },
   { name: "Why Legum", href: "#why-legum", isPage: false },
   { name: "Contact", href: "/contact", isPage: true },
