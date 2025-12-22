@@ -50,7 +50,7 @@ const navLinks: NavLink[] = [
     href: "/buy-licensed-entity", 
     isPage: true
   },
-  { name: "Why Legum", href: "#why-legum", isPage: false },
+  { name: "Why Legum", href: "/#why-legum", isPage: false },
   { name: "Contact", href: "/contact", isPage: true },
 ];
 
@@ -123,14 +123,14 @@ export const Navbar = () => {
                     )}
                   </Link>
                 ) : (
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className={`text-sm font-medium transition-colors hover:text-accent flex items-center gap-1 py-2 ${
                       isScrolled ? "text-foreground/70" : "text-foreground/70"
                     }`}
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 )}
 
                 {/* Dropdown Menu */}
@@ -238,13 +238,13 @@ export const Navbar = () => {
                         {link.name}
                       </Link>
                     ) : (
-                      <a
-                        href={link.href}
+                      <Link
+                        to={link.href}
                         className="text-foreground/70 hover:text-accent font-medium py-2 block"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         {link.name}
-                      </a>
+                      </Link>
                     )}
                   </div>
                 ))}

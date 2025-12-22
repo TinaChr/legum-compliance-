@@ -84,7 +84,7 @@ export const HeroSection = () => {
               </Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
-              <a href="#services">Explore Services</a>
+              <Link to="/services">Explore Services</Link>
             </Button>
           </motion.div>
 

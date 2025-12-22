@@ -8,8 +8,11 @@ import { PackagesSection } from "@/components/PackagesSection";
 import { FAQSection } from "@/components/FAQSection";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
+import { useScrollToHash } from "@/hooks/use-scroll-to-hash";
 
 const Index = () => {
+  useScrollToHash();
+  
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
