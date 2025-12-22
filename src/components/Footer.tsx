@@ -1,4 +1,5 @@
-import { Linkedin, Mail, MapPin, Clock } from "lucide-react";
+import { Linkedin } from "lucide-react";
+import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
 
 export const Footer = () => {
@@ -8,10 +9,10 @@ export const Footer = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
+            <Link to="/" className="flex items-center gap-2 mb-4">
               <img src={logo} alt="Legum Logo" className="h-10 w-10" />
               <span className="text-xl font-bold text-foreground">Legum</span>
-            </div>
+            </Link>
             <p className="text-muted-foreground mb-6">
               Your Compliance Partner for the Digital Age.
             </p>
@@ -24,45 +25,7 @@ export const Footer = () => {
               >
                 <Linkedin className="h-5 w-5 text-primary group-hover:text-primary-foreground" />
               </a>
-              <a
-                href="mailto:compliance@legum.com.ng"
-                className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors group"
-              >
-                <Mail className="h-5 w-5 text-primary group-hover:text-primary-foreground" />
-              </a>
             </div>
-          </div>
-
-          {/* Contact Information */}
-          <div>
-            <h4 className="text-foreground font-semibold mb-4">Contact Us</h4>
-            <ul className="space-y-4">
-              <li>
-                <a href="mailto:compliance@legum.com.ng" className="flex items-start gap-3 text-muted-foreground hover:text-primary transition-colors">
-                  <Mail className="h-5 w-5 shrink-0 mt-0.5" />
-                  <span>compliance@legum.com.ng</span>
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="https://linkedin.com/company/legum-limited" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-start gap-3 text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <Linkedin className="h-5 w-5 shrink-0 mt-0.5" />
-                  <span>legum-limited</span>
-                </a>
-              </li>
-              <li className="flex items-start gap-3 text-muted-foreground">
-                <MapPin className="h-5 w-5 shrink-0 mt-0.5" />
-                <span>No. 5 Kwaji Close, Maitama<br />Abuja, Nigeria</span>
-              </li>
-              <li className="flex items-start gap-3 text-muted-foreground">
-                <Clock className="h-5 w-5 shrink-0 mt-0.5" />
-                <span>Mon - Fri: 9:00 AM - 6:00 PM WAT</span>
-              </li>
-            </ul>
           </div>
 
           {/* Services */}
@@ -70,17 +33,33 @@ export const Footer = () => {
             <h4 className="text-foreground font-semibold mb-4">Services</h4>
             <ul className="space-y-3">
               {[
-                "ISO 27001 Certification",
-                "SOC 2 Compliance",
-                "GDPR & NDPR",
-                "Web3 Compliance",
-                "Smart Contract Audits",
-                "VASP Registration",
+                { label: "VASP Registration", href: "/services" },
+                { label: "EMI & Payment Institution", href: "/services" },
+                { label: "MSB Registration", href: "/services" },
+                { label: "Legal Entity Structuring", href: "/services" },
+                { label: "MiCA Readiness", href: "/services" },
               ].map((item) => (
-                <li key={item}>
-                  <a href="#services" className="text-muted-foreground hover:text-primary transition-colors">
-                    {item}
-                  </a>
+                <li key={item.label}>
+                  <Link to={item.href} className="text-muted-foreground hover:text-primary transition-colors">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Resources */}
+          <div>
+            <h4 className="text-foreground font-semibold mb-4">Resources</h4>
+            <ul className="space-y-3">
+              {[
+                { label: "Documents", href: "/documents" },
+                { label: "Buy/Sell License", href: "/buy-licensed-entity" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link to={item.href} className="text-muted-foreground hover:text-primary transition-colors">
+                    {item.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -91,16 +70,26 @@ export const Footer = () => {
             <h4 className="text-foreground font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-3">
               {[
-                { label: "About Us", href: "#why-legum" },
-                { label: "Services", href: "#services" },
-                { label: "Packages", href: "#packages" },
-                { label: "FAQ", href: "#faq" },
-                { label: "Contact", href: "#contact" },
+                { label: "Why Legum", href: "/#why-legum", isExternal: false },
+                { label: "Services", href: "/services", isExternal: false },
+                { label: "Contact", href: "/contact", isExternal: false },
+                { label: "Book a Call", href: "https://calendly.com/chioma-legum/30min", isExternal: true },
               ].map((item) => (
                 <li key={item.label}>
-                  <a href={item.href} className="text-muted-foreground hover:text-primary transition-colors">
-                    {item.label}
-                  </a>
+                  {item.isExternal ? (
+                    <a 
+                      href={item.href} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link to={item.href} className="text-muted-foreground hover:text-primary transition-colors">
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -112,9 +101,14 @@ export const Footer = () => {
           <p className="text-muted-foreground text-sm">
             © {new Date().getFullYear()} Legum Limited. All rights reserved.
           </p>
-          <p className="text-muted-foreground text-sm">
-            No. 5 Kwaji Close, Maitama, Abuja, Nigeria
-          </p>
+          <a
+            href="https://linkedin.com/company/legum-limited"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted-foreground text-sm hover:text-primary transition-colors"
+          >
+            Follow us on LinkedIn
+          </a>
         </div>
       </div>
     </footer>
