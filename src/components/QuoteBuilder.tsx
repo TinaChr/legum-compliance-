@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,104 +9,108 @@ import {
   ArrowRight, 
   ArrowLeft, 
   CheckCircle2, 
-  Building2,
   Shield,
   FileText,
   Calculator,
   X,
   Clock,
-  Sparkles
+  Sparkles,
+  AlertCircle,
+  Briefcase
 } from "lucide-react";
 
 interface Framework {
   id: string;
   name: string;
   description: string;
-  basePrice: number;
+  minPrice: number;
+  maxPrice: number;
   timeline: string;
+  category: string;
 }
 
-interface AddOn {
+interface PolicyAddOn {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+}
+
+interface ServiceAddOn {
   id: string;
   name: string;
   description: string;
   price: number;
 }
 
-interface Category {
-  id: string;
-  name: string;
-  description: string;
-  icon: React.ReactNode;
-  frameworks: Framework[];
-}
-
-const categories: Category[] = [
-  {
-    id: "vasp",
-    name: "VASP Registration",
-    description: "Virtual Asset Service Provider licensing across multiple jurisdictions",
-    icon: <Building2 className="h-6 w-6" />,
-    frameworks: [
-      { id: "vasp-uae-vara", name: "UAE VARA VASP License", description: "Dubai Virtual Assets Regulatory Authority", basePrice: 45000, timeline: "3-6 months" },
-      { id: "vasp-uae-adgm", name: "UAE ADGM FSRA License", description: "Abu Dhabi Global Market", basePrice: 55000, timeline: "4-8 months" },
-      { id: "vasp-singapore", name: "Singapore MAS License", description: "Monetary Authority of Singapore", basePrice: 65000, timeline: "6-12 months" },
-      { id: "vasp-hongkong", name: "Hong Kong VASP License", description: "Securities and Futures Commission", basePrice: 75000, timeline: "6-9 months" },
-    ]
-  },
-  {
-    id: "emi",
-    name: "EMI & Payment Institution",
-    description: "Electronic Money Institution and Payment Institution licensing",
-    icon: <Shield className="h-6 w-6" />,
-    frameworks: [
-      { id: "emi-lithuania", name: "Lithuania EMI License", description: "EU-wide e-money operations", basePrice: 85000, timeline: "6-9 months" },
-      { id: "emi-ireland", name: "Ireland EMI License", description: "Central Bank of Ireland regulated", basePrice: 120000, timeline: "9-12 months" },
-      { id: "pi-uk", name: "UK Payment Institution License", description: "FCA regulated payment services", basePrice: 95000, timeline: "6-12 months" },
-    ]
-  },
-  {
-    id: "msb",
-    name: "MSB Registration",
-    description: "Money Services Business registration in North America",
-    icon: <FileText className="h-6 w-6" />,
-    frameworks: [
-      { id: "msb-usa-fincen", name: "US FinCEN MSB Registration", description: "Federal registration + state licensing", basePrice: 35000, timeline: "3-18 months" },
-      { id: "msb-canada", name: "Canada FINTRAC MSB", description: "FINTRAC registered operations", basePrice: 25000, timeline: "2-4 months" },
-    ]
-  },
-  {
-    id: "legal-entity",
-    name: "Legal Entity Structuring",
-    description: "Foundations, DAOs, and corporate structures for Web3",
-    icon: <Building2 className="h-6 w-6" />,
-    frameworks: [
-      { id: "foundation-switzerland", name: "Swiss Foundation", description: "Token issuance & DAO governance", basePrice: 45000, timeline: "2-4 months" },
-      { id: "foundation-cayman", name: "Cayman Islands Foundation", description: "Flexible foundation company", basePrice: 35000, timeline: "1-2 months" },
-      { id: "foundation-bvi", name: "BVI Foundation", description: "Quick incorporation for Web3", basePrice: 15000, timeline: "1-2 weeks" },
-      { id: "foundation-panama", name: "Panama Private Foundation", description: "Asset protection structure", basePrice: 20000, timeline: "2-4 weeks" },
-      { id: "dao-wrapper-wyoming", name: "Wyoming DAO LLC", description: "Legal DAO structure in US", basePrice: 12000, timeline: "2-4 weeks" },
-    ]
-  },
-  {
-    id: "mica",
-    name: "MiCA Readiness",
-    description: "EU Markets in Crypto-Assets Regulation compliance",
-    icon: <Shield className="h-6 w-6" />,
-    frameworks: [
-      { id: "mica-casp", name: "EU MiCA CASP License", description: "Crypto-Asset Service Provider", basePrice: 95000, timeline: "6-12 months" },
-      { id: "mica-stablecoin", name: "MiCA Stablecoin Authorization", description: "EMT or ART issuance", basePrice: 150000, timeline: "9-15 months" },
-    ]
-  }
+// Compliance frameworks (from Services page)
+const frameworks: Framework[] = [
+  // VASP Registration
+  { id: "vasp-uae-vara", name: "UAE VARA VASP License", description: "Dubai Virtual Assets Regulatory Authority", minPrice: 35000, maxPrice: 55000, timeline: "3-6 months", category: "VASP Registration" },
+  { id: "vasp-uae-adgm", name: "UAE ADGM FSRA License", description: "Abu Dhabi Global Market", minPrice: 45000, maxPrice: 70000, timeline: "4-8 months", category: "VASP Registration" },
+  { id: "vasp-singapore", name: "Singapore MAS License", description: "Monetary Authority of Singapore", minPrice: 55000, maxPrice: 85000, timeline: "6-12 months", category: "VASP Registration" },
+  { id: "vasp-hongkong", name: "Hong Kong VASP License", description: "Securities and Futures Commission", minPrice: 65000, maxPrice: 95000, timeline: "6-9 months", category: "VASP Registration" },
+  // EMI & Payment Institution
+  { id: "emi-lithuania", name: "Lithuania EMI License", description: "EU-wide e-money operations", minPrice: 70000, maxPrice: 110000, timeline: "6-9 months", category: "EMI & Payment Institution" },
+  { id: "emi-ireland", name: "Ireland EMI License", description: "Central Bank of Ireland regulated", minPrice: 100000, maxPrice: 150000, timeline: "9-12 months", category: "EMI & Payment Institution" },
+  { id: "pi-uk", name: "UK Payment Institution License", description: "FCA regulated payment services", minPrice: 80000, maxPrice: 120000, timeline: "6-12 months", category: "EMI & Payment Institution" },
+  // MSB Registration
+  { id: "msb-usa-fincen", name: "US FinCEN MSB Registration", description: "Federal registration + state licensing", minPrice: 25000, maxPrice: 50000, timeline: "3-18 months", category: "MSB Registration" },
+  { id: "msb-canada", name: "Canada FINTRAC MSB", description: "FINTRAC registered operations", minPrice: 18000, maxPrice: 35000, timeline: "2-4 months", category: "MSB Registration" },
+  // Legal Entity Structuring
+  { id: "foundation-switzerland", name: "Swiss Foundation", description: "Token issuance & DAO governance", minPrice: 35000, maxPrice: 60000, timeline: "2-4 months", category: "Legal Entity Structuring" },
+  { id: "foundation-cayman", name: "Cayman Islands Foundation", description: "Flexible foundation company", minPrice: 25000, maxPrice: 45000, timeline: "1-2 months", category: "Legal Entity Structuring" },
+  { id: "foundation-bvi", name: "BVI Foundation", description: "Quick incorporation for Web3", minPrice: 10000, maxPrice: 20000, timeline: "1-2 weeks", category: "Legal Entity Structuring" },
+  { id: "foundation-panama", name: "Panama Private Foundation", description: "Asset protection structure", minPrice: 15000, maxPrice: 28000, timeline: "2-4 weeks", category: "Legal Entity Structuring" },
+  { id: "dao-wrapper-wyoming", name: "Wyoming DAO LLC", description: "Legal DAO structure in US", minPrice: 8000, maxPrice: 18000, timeline: "2-4 weeks", category: "Legal Entity Structuring" },
+  // MiCA Readiness
+  { id: "mica-casp", name: "EU MiCA CASP License", description: "Crypto-Asset Service Provider", minPrice: 80000, maxPrice: 120000, timeline: "6-12 months", category: "MiCA Readiness" },
+  { id: "mica-stablecoin", name: "MiCA Stablecoin Authorization", description: "EMT or ART issuance", minPrice: 120000, maxPrice: 190000, timeline: "9-15 months", category: "MiCA Readiness" },
 ];
 
-const addOns: AddOn[] = [
+// Policy add-ons (from Documents page)
+const policyAddOns: PolicyAddOn[] = [
+  // AML/KYC
+  { id: "aml-ctf-policies", name: "AML/CTF Policy Bundle", description: "Complete AML/CTF policy manual with CDD, EDD, and SAR procedures", price: 600, category: "AML/KYC" },
+  { id: "kyc-cdd-policies", name: "KYC/CDD Policy Bundle", description: "KYC policy set with PEP screening, sanctions, and beneficial ownership", price: 550, category: "AML/KYC" },
+  { id: "transaction-monitoring-policies", name: "Transaction Monitoring Policies", description: "Transaction monitoring with crypto-specific rules", price: 400, category: "AML/KYC" },
+  { id: "sanctions-policies", name: "Sanctions Compliance Policies", description: "OFAC, UN, EU sanctions policies with wallet screening", price: 350, category: "AML/KYC" },
+  // Data Protection
+  { id: "gdpr-policies", name: "GDPR Policy Bundle", description: "Comprehensive GDPR policy set with DPIAs and privacy notices", price: 500, category: "Data Protection" },
+  { id: "ndpr-policies", name: "NDPR Policy Bundle", description: "Nigeria Data Protection Regulation policy set", price: 350, category: "Data Protection" },
+  // Web3 Regulatory
+  { id: "vasp-policies", name: "VASP Compliance Policies", description: "Virtual Asset Service Provider policies with travel rule", price: 550, category: "Web3 Regulatory" },
+  { id: "mica-policies", name: "MiCA Compliance Policies", description: "Complete MiCA policy set with crypto-asset classification", price: 600, category: "Web3 Regulatory" },
+  // Token Governance
+  { id: "securities-policies", name: "Securities Law Policies", description: "Securities policies including Reg D, Reg S, Reg CF", price: 550, category: "Token Governance" },
+  { id: "whitepaper-policies", name: "Whitepaper Publication Policies", description: "Risk disclosure templates and safe harbor language", price: 300, category: "Token Governance" },
+  { id: "tokenomics-policies", name: "Tokenomics Compliance Policies", description: "Distribution, vesting, and supply mechanics policies", price: 400, category: "Token Governance" },
+  { id: "dao-governance-policies", name: "DAO Governance Policies", description: "Voting mechanisms, treasury, and contributor agreements", price: 500, category: "Token Governance" },
+  // ISMS
+  { id: "iso27001-policies", name: "ISO 27001 Policy Bundle", description: "Complete set of 25+ required policies for ISO 27001", price: 750, category: "Information Security" },
+  { id: "soc2-policies", name: "SOC 2 Policy Bundle", description: "Security, Availability, Confidentiality, and Privacy policies", price: 450, category: "Information Security" },
+  // Corporate Governance
+  { id: "internal-compliance-policies", name: "Internal Compliance Policies", description: "Code of conduct, ethics, and whistleblower policies", price: 450, category: "Corporate Governance" },
+  { id: "board-governance-policies", name: "Board & Governance Policies", description: "Board charter, committee charters, and conflict of interest", price: 400, category: "Corporate Governance" },
+];
+
+// Additional service add-ons
+const serviceAddOns: ServiceAddOn[] = [
   { id: "aml-program", name: "AML/KYC Program Development", description: "Complete anti-money laundering compliance framework", price: 15000 },
-  { id: "compliance-manual", name: "Compliance Manual & Policies", description: "Customized policies and procedures documentation", price: 8000 },
   { id: "staff-training", name: "Staff Compliance Training", description: "Comprehensive team training program", price: 5000 },
   { id: "ongoing-support", name: "12-Month Ongoing Support", description: "Dedicated compliance support and monitoring", price: 24000 },
   { id: "tech-integration", name: "Technology Integration", description: "Compliance software setup and integration", price: 12000 },
   { id: "regulatory-liaison", name: "Regulatory Liaison Services", description: "Direct communication with regulators", price: 10000 },
+  { id: "gap-analysis", name: "Regulatory Gap Analysis", description: "Comprehensive compliance assessment", price: 8000 },
+];
+
+const frameworkCategories = [
+  "VASP Registration",
+  "EMI & Payment Institution", 
+  "MSB Registration",
+  "Legal Entity Structuring",
+  "MiCA Readiness"
 ];
 
 interface QuoteBuilderProps {
@@ -114,46 +119,56 @@ interface QuoteBuilderProps {
 }
 
 export function QuoteBuilder({ isOpen, onClose }: QuoteBuilderProps) {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedFrameworks, setSelectedFrameworks] = useState<string[]>([]);
-  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
+  const [selectedPolicies, setSelectedPolicies] = useState<string[]>([]);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
-  const currentCategory = categories.find(c => c.id === selectedCategory);
-
-  const calculateTotal = () => {
-    let total = 0;
+  const calculatePriceRange = () => {
+    let minTotal = 0;
+    let maxTotal = 0;
     
     // Add framework prices
     selectedFrameworks.forEach(fId => {
-      categories.forEach(cat => {
-        const framework = cat.frameworks.find(f => f.id === fId);
-        if (framework) total += framework.basePrice;
-      });
+      const framework = frameworks.find(f => f.id === fId);
+      if (framework) {
+        minTotal += framework.minPrice;
+        maxTotal += framework.maxPrice;
+      }
     });
     
-    // Add add-on prices
-    selectedAddOns.forEach(aId => {
-      const addOn = addOns.find(a => a.id === aId);
-      if (addOn) total += addOn.price;
+    // Add policy prices
+    selectedPolicies.forEach(pId => {
+      const policy = policyAddOns.find(p => p.id === pId);
+      if (policy) {
+        minTotal += policy.price;
+        maxTotal += policy.price;
+      }
     });
     
-    return total;
+    // Add service prices
+    selectedServices.forEach(sId => {
+      const service = serviceAddOns.find(s => s.id === sId);
+      if (service) {
+        minTotal += service.price;
+        maxTotal += service.price;
+      }
+    });
+    
+    return { min: minTotal, max: maxTotal };
   };
 
   const getSelectedFrameworkDetails = () => {
-    const frameworks: Framework[] = [];
-    selectedFrameworks.forEach(fId => {
-      categories.forEach(cat => {
-        const framework = cat.frameworks.find(f => f.id === fId);
-        if (framework) frameworks.push(framework);
-      });
-    });
-    return frameworks;
+    return frameworks.filter(f => selectedFrameworks.includes(f.id));
   };
 
-  const getSelectedAddOnDetails = () => {
-    return addOns.filter(a => selectedAddOns.includes(a.id));
+  const getSelectedPolicyDetails = () => {
+    return policyAddOns.filter(p => selectedPolicies.includes(p.id));
+  };
+
+  const getSelectedServiceDetails = () => {
+    return serviceAddOns.filter(s => selectedServices.includes(s.id));
   };
 
   const handleFrameworkToggle = (frameworkId: string) => {
@@ -164,19 +179,27 @@ export function QuoteBuilder({ isOpen, onClose }: QuoteBuilderProps) {
     );
   };
 
-  const handleAddOnToggle = (addOnId: string) => {
-    setSelectedAddOns(prev => 
-      prev.includes(addOnId) 
-        ? prev.filter(id => id !== addOnId)
-        : [...prev, addOnId]
+  const handlePolicyToggle = (policyId: string) => {
+    setSelectedPolicies(prev => 
+      prev.includes(policyId) 
+        ? prev.filter(id => id !== policyId)
+        : [...prev, policyId]
+    );
+  };
+
+  const handleServiceToggle = (serviceId: string) => {
+    setSelectedServices(prev => 
+      prev.includes(serviceId) 
+        ? prev.filter(id => id !== serviceId)
+        : [...prev, serviceId]
     );
   };
 
   const resetBuilder = () => {
     setStep(1);
-    setSelectedCategory(null);
     setSelectedFrameworks([]);
-    setSelectedAddOns([]);
+    setSelectedPolicies([]);
+    setSelectedServices([]);
   };
 
   const handleClose = () => {
@@ -184,15 +207,27 @@ export function QuoteBuilder({ isOpen, onClose }: QuoteBuilderProps) {
     onClose();
   };
 
+  const handleRequestQuote = () => {
+    const selectedItems = [
+      ...selectedFrameworks,
+      ...selectedPolicies,
+      ...selectedServices
+    ].join(",");
+    handleClose();
+    navigate(`/contact?quote=${encodeURIComponent(selectedItems)}`);
+  };
+
   const canProceed = () => {
     switch (step) {
-      case 1: return selectedCategory !== null;
-      case 2: return selectedFrameworks.length > 0;
-      case 3: return true; // Add-ons are optional
+      case 1: return selectedFrameworks.length > 0;
+      case 2: return true; // Policies are optional
+      case 3: return true; // Services are optional
       case 4: return true;
       default: return false;
     }
   };
+
+  const priceRange = calculatePriceRange();
 
   if (!isOpen) return null;
 
@@ -211,8 +246,8 @@ export function QuoteBuilder({ isOpen, onClose }: QuoteBuilderProps) {
               <Calculator className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-foreground">Quote Builder</h2>
-              <p className="text-sm text-muted-foreground">Build your custom compliance package</p>
+              <h2 className="text-xl font-bold text-foreground">Build Your Quote</h2>
+              <p className="text-sm text-muted-foreground">Get an indicative price for your compliance package</p>
             </div>
           </div>
           <button 
@@ -227,9 +262,9 @@ export function QuoteBuilder({ isOpen, onClose }: QuoteBuilderProps) {
         <div className="px-6 py-4 border-b border-border bg-muted/30">
           <div className="flex items-center justify-between max-w-2xl mx-auto">
             {[
-              { num: 1, label: "Category" },
-              { num: 2, label: "Frameworks" },
-              { num: 3, label: "Add-ons" },
+              { num: 1, label: "Framework" },
+              { num: 2, label: "Policies" },
+              { num: 3, label: "Services" },
               { num: 4, label: "Review" }
             ].map((s, idx) => (
               <div key={s.num} className="flex items-center">
@@ -256,106 +291,141 @@ export function QuoteBuilder({ isOpen, onClose }: QuoteBuilderProps) {
         {/* Content */}
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-280px)]">
           <AnimatePresence mode="wait">
-            {/* Step 1: Select Category */}
+            {/* Step 1: Select Compliance Framework */}
             {step === 1 && (
               <motion.div
                 key="step1"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-4"
+                className="space-y-6"
               >
                 <div className="text-center mb-6">
-                  <h3 className="text-lg font-semibold text-foreground">Select a Service Category</h3>
-                  <p className="text-sm text-muted-foreground">Choose the type of compliance service you need</p>
+                  <h3 className="text-lg font-semibold text-foreground">Choose Compliance Framework(s)</h3>
+                  <p className="text-sm text-muted-foreground">Select one or more licensing/registration frameworks</p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {categories.map((category) => (
-                    <Card 
-                      key={category.id}
-                      className={`cursor-pointer transition-all hover:shadow-md ${
-                        selectedCategory === category.id 
-                          ? 'border-primary ring-2 ring-primary/20' 
-                          : 'hover:border-accent/50'
-                      }`}
-                      onClick={() => setSelectedCategory(category.id)}
-                    >
-                      <CardHeader className="pb-2">
-                        <div className="flex items-center gap-3">
-                          <div className={`p-2 rounded-lg ${selectedCategory === category.id ? 'bg-primary/20' : 'bg-muted'}`}>
-                            {category.icon}
-                          </div>
-                          <CardTitle className="text-base">{category.name}</CardTitle>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <CardDescription>{category.description}</CardDescription>
-                        <Badge variant="outline" className="mt-2">
-                          {category.frameworks.length} options
-                        </Badge>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                
+                {frameworkCategories.map((category) => {
+                  const categoryFrameworks = frameworks.filter(f => f.category === category);
+                  return (
+                    <div key={category} className="space-y-3">
+                      <h4 className="font-medium text-foreground flex items-center gap-2">
+                        <Shield className="h-4 w-4 text-primary" />
+                        {category}
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {categoryFrameworks.map((framework) => (
+                          <Card 
+                            key={framework.id}
+                            className={`cursor-pointer transition-all hover:shadow-md ${
+                              selectedFrameworks.includes(framework.id) 
+                                ? 'border-primary ring-2 ring-primary/20' 
+                                : 'hover:border-accent/50'
+                            }`}
+                            onClick={() => handleFrameworkToggle(framework.id)}
+                          >
+                            <CardContent className="p-4">
+                              <div className="flex items-start gap-3">
+                                <Checkbox 
+                                  checked={selectedFrameworks.includes(framework.id)}
+                                  className="mt-1"
+                                />
+                                <div className="flex-1">
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div>
+                                      <h5 className="font-medium text-foreground text-sm">{framework.name}</h5>
+                                      <p className="text-xs text-muted-foreground">{framework.description}</p>
+                                    </div>
+                                    <div className="text-right shrink-0">
+                                      <div className="text-xs font-semibold text-primary">
+                                        ${framework.minPrice.toLocaleString()} - ${framework.maxPrice.toLocaleString()}
+                                      </div>
+                                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                        <Clock className="h-3 w-3" />
+                                        {framework.timeline}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
               </motion.div>
             )}
 
-            {/* Step 2: Select Frameworks */}
-            {step === 2 && currentCategory && (
+            {/* Step 2: Optional Policy Add-ons */}
+            {step === 2 && (
               <motion.div
                 key="step2"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-4"
+                className="space-y-6"
               >
                 <div className="text-center mb-6">
-                  <h3 className="text-lg font-semibold text-foreground">Select Compliance Frameworks</h3>
-                  <p className="text-sm text-muted-foreground">Choose one or more frameworks from {currentCategory.name}</p>
+                  <h3 className="text-lg font-semibold text-foreground">Optional Policy Add-ons</h3>
+                  <p className="text-sm text-muted-foreground">Enhance your compliance package with policy documentation</p>
                 </div>
-                <div className="space-y-3">
-                  {currentCategory.frameworks.map((framework) => (
-                    <Card 
-                      key={framework.id}
-                      className={`cursor-pointer transition-all hover:shadow-md ${
-                        selectedFrameworks.includes(framework.id) 
-                          ? 'border-primary ring-2 ring-primary/20' 
-                          : 'hover:border-accent/50'
-                      }`}
-                      onClick={() => handleFrameworkToggle(framework.id)}
-                    >
-                      <CardContent className="p-4">
-                        <div className="flex items-start gap-4">
-                          <Checkbox 
-                            checked={selectedFrameworks.includes(framework.id)}
-                            className="mt-1"
-                          />
-                          <div className="flex-1">
-                            <div className="flex items-start justify-between">
-                              <div>
-                                <h4 className="font-medium text-foreground">{framework.name}</h4>
-                                <p className="text-sm text-muted-foreground">{framework.description}</p>
-                              </div>
-                              <div className="text-right">
-                                <div className="font-semibold text-primary">
-                                  ${framework.basePrice.toLocaleString()}
+                
+                {["AML/KYC", "Data Protection", "Web3 Regulatory", "Token Governance", "Information Security", "Corporate Governance"].map((category) => {
+                  const categoryPolicies = policyAddOns.filter(p => p.category === category);
+                  if (categoryPolicies.length === 0) return null;
+                  return (
+                    <div key={category} className="space-y-3">
+                      <h4 className="font-medium text-foreground flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-accent" />
+                        {category}
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {categoryPolicies.map((policy) => (
+                          <Card 
+                            key={policy.id}
+                            className={`cursor-pointer transition-all hover:shadow-md ${
+                              selectedPolicies.includes(policy.id) 
+                                ? 'border-primary ring-2 ring-primary/20' 
+                                : 'hover:border-accent/50'
+                            }`}
+                            onClick={() => handlePolicyToggle(policy.id)}
+                          >
+                            <CardContent className="p-4">
+                              <div className="flex items-start gap-3">
+                                <Checkbox 
+                                  checked={selectedPolicies.includes(policy.id)}
+                                  className="mt-1"
+                                />
+                                <div className="flex-1">
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div>
+                                      <h5 className="font-medium text-foreground text-sm">{policy.name}</h5>
+                                      <p className="text-xs text-muted-foreground">{policy.description}</p>
+                                    </div>
+                                    <div className="font-semibold text-primary whitespace-nowrap text-sm">
+                                      +${policy.price.toLocaleString()}
+                                    </div>
+                                  </div>
                                 </div>
-                                <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                  <Clock className="h-3 w-3" />
-                                  {framework.timeline}
-                                </div>
                               </div>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+                
+                <div className="text-center text-sm text-muted-foreground mt-4">
+                  <Sparkles className="inline h-4 w-4 mr-1" />
+                  Policies are optional. You can skip this step.
                 </div>
               </motion.div>
             )}
 
-            {/* Step 3: Select Add-ons */}
+            {/* Step 3: Optional Service Add-ons */}
             {step === 3 && (
               <motion.div
                 key="step3"
@@ -365,34 +435,34 @@ export function QuoteBuilder({ isOpen, onClose }: QuoteBuilderProps) {
                 className="space-y-4"
               >
                 <div className="text-center mb-6">
-                  <h3 className="text-lg font-semibold text-foreground">Optional Add-ons</h3>
-                  <p className="text-sm text-muted-foreground">Enhance your compliance package with additional services</p>
+                  <h3 className="text-lg font-semibold text-foreground">Optional Additional Services</h3>
+                  <p className="text-sm text-muted-foreground">Add professional services to support your compliance journey</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {addOns.map((addOn) => (
+                  {serviceAddOns.map((service) => (
                     <Card 
-                      key={addOn.id}
+                      key={service.id}
                       className={`cursor-pointer transition-all hover:shadow-md ${
-                        selectedAddOns.includes(addOn.id) 
+                        selectedServices.includes(service.id) 
                           ? 'border-primary ring-2 ring-primary/20' 
                           : 'hover:border-accent/50'
                       }`}
-                      onClick={() => handleAddOnToggle(addOn.id)}
+                      onClick={() => handleServiceToggle(service.id)}
                     >
                       <CardContent className="p-4">
                         <div className="flex items-start gap-3">
                           <Checkbox 
-                            checked={selectedAddOns.includes(addOn.id)}
+                            checked={selectedServices.includes(service.id)}
                             className="mt-1"
                           />
                           <div className="flex-1">
                             <div className="flex items-start justify-between gap-2">
                               <div>
-                                <h4 className="font-medium text-foreground text-sm">{addOn.name}</h4>
-                                <p className="text-xs text-muted-foreground">{addOn.description}</p>
+                                <h4 className="font-medium text-foreground text-sm">{service.name}</h4>
+                                <p className="text-xs text-muted-foreground">{service.description}</p>
                               </div>
-                              <div className="font-semibold text-primary whitespace-nowrap">
-                                +${addOn.price.toLocaleString()}
+                              <div className="font-semibold text-primary whitespace-nowrap text-sm">
+                                +${service.price.toLocaleString()}
                               </div>
                             </div>
                           </div>
@@ -400,6 +470,11 @@ export function QuoteBuilder({ isOpen, onClose }: QuoteBuilderProps) {
                       </CardContent>
                     </Card>
                   ))}
+                </div>
+                
+                <div className="text-center text-sm text-muted-foreground mt-4">
+                  <Sparkles className="inline h-4 w-4 mr-1" />
+                  Additional services are optional. You can skip this step.
                 </div>
               </motion.div>
             )}
@@ -414,91 +489,100 @@ export function QuoteBuilder({ isOpen, onClose }: QuoteBuilderProps) {
                 className="space-y-6"
               >
                 <div className="text-center mb-6">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/20 mb-3">
-                    <Sparkles className="h-6 w-6 text-accent" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground">Your Custom Quote</h3>
+                  <h3 className="text-lg font-semibold text-foreground">Review Your Quote</h3>
                   <p className="text-sm text-muted-foreground">Review your selections and indicative pricing</p>
                 </div>
-
-                <Card className="border-accent/30 bg-gradient-to-br from-accent/5 to-primary/5">
-                  <CardContent className="p-6 space-y-6">
-                    {/* Selected Frameworks */}
-                    <div>
-                      <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-                        <Shield className="h-4 w-4 text-primary" />
-                        Selected Frameworks
-                      </h4>
+                
+                <div className="space-y-6">
+                  {/* Selected Frameworks */}
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-foreground flex items-center gap-2">
+                      <Shield className="h-4 w-4 text-primary" />
+                      Compliance Frameworks
+                    </h4>
+                    {getSelectedFrameworkDetails().length > 0 ? (
                       <div className="space-y-2">
                         {getSelectedFrameworkDetails().map((framework) => (
-                          <div key={framework.id} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
+                          <div key={framework.id} className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                             <div>
-                              <div className="font-medium text-foreground">{framework.name}</div>
-                              <div className="text-xs text-muted-foreground flex items-center gap-1">
-                                <Clock className="h-3 w-3" />
-                                {framework.timeline}
-                              </div>
+                              <div className="font-medium text-sm">{framework.name}</div>
+                              <div className="text-xs text-muted-foreground">{framework.timeline}</div>
                             </div>
-                            <div className="font-semibold text-foreground">
-                              ${framework.basePrice.toLocaleString()}
+                            <div className="text-sm font-medium text-primary">
+                              ${framework.minPrice.toLocaleString()} - ${framework.maxPrice.toLocaleString()}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">No frameworks selected</p>
+                    )}
+                  </div>
+
+                  {/* Selected Policies */}
+                  {getSelectedPolicyDetails().length > 0 && (
+                    <div className="space-y-3">
+                      <h4 className="font-semibold text-foreground flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-accent" />
+                        Policy Add-ons
+                      </h4>
+                      <div className="space-y-2">
+                        {getSelectedPolicyDetails().map((policy) => (
+                          <div key={policy.id} className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                            <div className="font-medium text-sm">{policy.name}</div>
+                            <div className="text-sm font-medium text-primary">
+                              +${policy.price.toLocaleString()}
                             </div>
                           </div>
                         ))}
                       </div>
                     </div>
+                  )}
 
-                    {/* Selected Add-ons */}
-                    {selectedAddOns.length > 0 && (
-                      <div>
-                        <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-                          <Sparkles className="h-4 w-4 text-accent" />
-                          Add-on Services
-                        </h4>
-                        <div className="space-y-2">
-                          {getSelectedAddOnDetails().map((addOn) => (
-                            <div key={addOn.id} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
-                              <div className="font-medium text-foreground">{addOn.name}</div>
-                              <div className="font-semibold text-foreground">
-                                ${addOn.price.toLocaleString()}
-                              </div>
+                  {/* Selected Services */}
+                  {getSelectedServiceDetails().length > 0 && (
+                    <div className="space-y-3">
+                      <h4 className="font-semibold text-foreground flex items-center gap-2">
+                        <Briefcase className="h-4 w-4 text-accent" />
+                        Additional Services
+                      </h4>
+                      <div className="space-y-2">
+                        {getSelectedServiceDetails().map((service) => (
+                          <div key={service.id} className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                            <div className="font-medium text-sm">{service.name}</div>
+                            <div className="text-sm font-medium text-primary">
+                              +${service.price.toLocaleString()}
                             </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Total */}
-                    <div className="pt-4 border-t-2 border-primary/30">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="text-lg font-bold text-foreground">Indicative Total</div>
-                          <div className="text-xs text-muted-foreground">*Final pricing may vary based on requirements</div>
-                        </div>
-                        <div className="text-2xl font-bold text-primary">
-                          ${calculateTotal().toLocaleString()}
-                        </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  )}
 
-                <div className="bg-muted/50 rounded-lg p-4 text-center">
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Ready to proceed? Our team will prepare a detailed proposal based on your selections.
-                  </p>
-                  <Button asChild>
-                    <a href={`/contact?quote=custom&total=${calculateTotal()}&frameworks=${selectedFrameworks.join(',')}&addons=${selectedAddOns.join(',')}`}>
-                      Request Detailed Proposal
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </a>
-                  </Button>
+                  {/* Indicative Price Range */}
+                  <Card className="bg-gradient-to-r from-primary/5 to-accent/5 border-primary/20">
+                    <CardContent className="p-6">
+                      <div className="text-center">
+                        <div className="text-sm text-muted-foreground mb-2">Indicative Price Range</div>
+                        <div className="text-3xl font-bold text-primary mb-4">
+                          ${priceRange.min.toLocaleString()} - ${priceRange.max.toLocaleString()}
+                        </div>
+                        <div className="flex items-start gap-2 p-3 bg-background/50 rounded-lg text-left">
+                          <AlertCircle className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                          <p className="text-xs text-muted-foreground">
+                            This is an indicative estimate only. Final pricing will be determined after a detailed consultation to understand your specific requirements, jurisdictional complexities, and timeline considerations.
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* Footer Navigation */}
+        {/* Footer */}
         <div className="p-6 border-t border-border bg-muted/30 flex items-center justify-between">
           <Button
             variant="outline"
@@ -507,16 +591,32 @@ export function QuoteBuilder({ isOpen, onClose }: QuoteBuilderProps) {
             <ArrowLeft className="mr-2 h-4 w-4" />
             {step === 1 ? 'Cancel' : 'Back'}
           </Button>
-          
-          {step < 4 && (
-            <Button
-              onClick={() => setStep(step + 1)}
-              disabled={!canProceed()}
-            >
-              Continue
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          )}
+
+          <div className="flex items-center gap-4">
+            {priceRange.max > 0 && step < 4 && (
+              <div className="text-right hidden sm:block">
+                <div className="text-xs text-muted-foreground">Estimated Range</div>
+                <div className="font-semibold text-primary">
+                  ${priceRange.min.toLocaleString()} - ${priceRange.max.toLocaleString()}
+                </div>
+              </div>
+            )}
+
+            {step < 4 ? (
+              <Button
+                onClick={() => setStep(step + 1)}
+                disabled={!canProceed()}
+              >
+                {step === 1 ? 'Next' : 'Continue'}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            ) : (
+              <Button onClick={handleRequestQuote} variant="hero">
+                Request Detailed Quote
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            )}
+          </div>
         </div>
       </motion.div>
     </div>

@@ -132,7 +132,7 @@ export function ServiceCategorySection({
                   </div>
                   <Button className="w-full group/btn" asChild>
                     <Link to={`/contact?service=${entity.id}`}>
-                      Inquire Now
+                      Build Your Quote
                       <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                     </Link>
                   </Button>
