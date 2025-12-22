@@ -11,326 +11,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { 
   Building2, 
-  Globe, 
-  Shield, 
-  FileCheck, 
   ArrowRight, 
   CheckCircle2, 
-  Search, 
-  X,
-  MapPin,
   Clock,
-  DollarSign,
-  Star
+  ShoppingCart,
+  Store
 } from "lucide-react";
 import { Link } from "react-router-dom";
-
-interface LicensedEntity {
-  id: string;
-  name: string;
-  jurisdiction: string;
-  type: string;
-  description: string;
-  features: string[];
-  price: string;
-  timeline: string;
-  popular?: boolean;
-  category: string;
-}
-
-const licensedEntities: LicensedEntity[] = [
-  // VASP Licenses
-  {
-    id: "vasp-uae-vara",
-    name: "UAE VARA VASP License",
-    jurisdiction: "United Arab Emirates",
-    type: "VASP License",
-    description: "Virtual Asset Service Provider license from the Virtual Assets Regulatory Authority (VARA) in Dubai.",
-    features: [
-      "Full crypto exchange operations",
-      "Custody services permitted",
-      "Broker-dealer activities",
-      "NFT marketplace operations",
-      "Lending and staking services"
-    ],
-    price: "Contact for pricing",
-    timeline: "3-6 months",
-    popular: true,
-    category: "VASP Registration"
-  },
-  {
-    id: "vasp-uae-adgm",
-    name: "UAE ADGM FSRA License",
-    jurisdiction: "United Arab Emirates (Abu Dhabi)",
-    type: "FSRA License",
-    description: "Financial Services Regulatory Authority license from Abu Dhabi Global Market for virtual asset activities.",
-    features: [
-      "Virtual asset custody",
-      "Virtual asset exchange",
-      "Virtual asset management",
-      "Multilateral trading facility",
-      "Regulated sandbox options"
-    ],
-    price: "Contact for pricing",
-    timeline: "4-8 months",
-    category: "VASP Registration"
-  },
-  {
-    id: "vasp-singapore",
-    name: "Singapore MAS License",
-    jurisdiction: "Singapore",
-    type: "Payment Services License",
-    description: "Major Payment Institution (MPI) license from the Monetary Authority of Singapore for digital payment token services.",
-    features: [
-      "Digital payment token dealing",
-      "Cross-border money transfer",
-      "E-money issuance",
-      "Account issuance services",
-      "Domestic money transfer"
-    ],
-    price: "Contact for pricing",
-    timeline: "6-12 months",
-    popular: true,
-    category: "VASP Registration"
-  },
-  {
-    id: "vasp-hongkong",
-    name: "Hong Kong VASP License",
-    jurisdiction: "Hong Kong",
-    type: "VASP License",
-    description: "Virtual Asset Service Provider license from the Securities and Futures Commission (SFC) of Hong Kong.",
-    features: [
-      "Virtual asset trading platform",
-      "Retail and professional investors",
-      "Custody solutions",
-      "Token listing services",
-      "OTC trading permitted"
-    ],
-    price: "Contact for pricing",
-    timeline: "6-9 months",
-    category: "VASP Registration"
-  },
-  // EMI & Payment Institution Licenses
-  {
-    id: "emi-lithuania",
-    name: "Lithuania EMI License",
-    jurisdiction: "Lithuania (EU)",
-    type: "Electronic Money Institution",
-    description: "EU-wide Electronic Money Institution license enabling e-money issuance and payment services across the European Economic Area.",
-    features: [
-      "E-money issuance",
-      "Payment processing",
-      "EU passporting rights",
-      "IBAN account issuance",
-      "Card program management"
-    ],
-    price: "Contact for pricing",
-    timeline: "6-9 months",
-    popular: true,
-    category: "EMI & Payment Institution"
-  },
-  {
-    id: "emi-ireland",
-    name: "Ireland EMI License",
-    jurisdiction: "Ireland (EU)",
-    type: "Electronic Money Institution",
-    description: "Central Bank of Ireland regulated EMI license with full EU passporting capabilities.",
-    features: [
-      "E-money issuance",
-      "Payment services",
-      "EU/EEA passporting",
-      "Safeguarding requirements",
-      "Virtual IBAN services"
-    ],
-    price: "Contact for pricing",
-    timeline: "9-12 months",
-    category: "EMI & Payment Institution"
-  },
-  {
-    id: "pi-uk",
-    name: "UK Payment Institution License",
-    jurisdiction: "United Kingdom",
-    type: "Authorized Payment Institution",
-    description: "FCA regulated payment institution license for authorized payment services in the United Kingdom.",
-    features: [
-      "Payment initiation services",
-      "Account information services",
-      "Money remittance",
-      "Payment execution",
-      "Merchant acquiring"
-    ],
-    price: "Contact for pricing",
-    timeline: "6-12 months",
-    category: "EMI & Payment Institution"
-  },
-  // MSB Registrations
-  {
-    id: "msb-usa-fincen",
-    name: "US FinCEN MSB Registration",
-    jurisdiction: "United States",
-    type: "Money Services Business",
-    description: "Federal FinCEN registration as a Money Services Business with state-level money transmitter licensing support.",
-    features: [
-      "Virtual currency exchange",
-      "Money transmission",
-      "Currency dealing",
-      "Check cashing",
-      "Multi-state licensing"
-    ],
-    price: "Contact for pricing",
-    timeline: "3-18 months (varies by state)",
-    category: "MSB Registration"
-  },
-  {
-    id: "msb-canada",
-    name: "Canada FINTRAC MSB",
-    jurisdiction: "Canada",
-    type: "Money Services Business",
-    description: "FINTRAC registered Money Services Business for cryptocurrency and virtual asset operations in Canada.",
-    features: [
-      "Virtual currency dealing",
-      "Money transfer services",
-      "Currency exchange",
-      "Remittance services",
-      "Bitcoin ATM operations"
-    ],
-    price: "Contact for pricing",
-    timeline: "2-4 months",
-    category: "MSB Registration"
-  },
-  // Legal Entity Structures
-  {
-    id: "foundation-switzerland",
-    name: "Swiss Foundation",
-    jurisdiction: "Switzerland",
-    type: "Foundation Structure",
-    description: "Swiss foundation setup for token issuance, DAO governance, and decentralized project management.",
-    features: [
-      "Token issuance vehicle",
-      "DAO legal wrapper",
-      "Tax efficient structure",
-      "Regulatory clarity",
-      "Foundation council governance"
-    ],
-    price: "Contact for pricing",
-    timeline: "2-4 months",
-    popular: true,
-    category: "Legal Entity Structuring"
-  },
-  {
-    id: "foundation-cayman",
-    name: "Cayman Islands Foundation",
-    jurisdiction: "Cayman Islands",
-    type: "Foundation Company",
-    description: "Cayman Foundation Company structure ideal for decentralized protocols and token ecosystems.",
-    features: [
-      "No beneficial owners required",
-      "Flexible governance",
-      "Tax neutral jurisdiction",
-      "Token project friendly",
-      "DAO integration support"
-    ],
-    price: "Contact for pricing",
-    timeline: "1-2 months",
-    category: "Legal Entity Structuring"
-  },
-  {
-    id: "foundation-bvi",
-    name: "BVI Foundation",
-    jurisdiction: "British Virgin Islands",
-    type: "Limited Purpose Company",
-    description: "BVI company structure with foundation characteristics for Web3 projects and token issuance.",
-    features: [
-      "Flexible corporate structure",
-      "No taxation",
-      "Privacy protection",
-      "Quick incorporation",
-      "Token issuance ready"
-    ],
-    price: "Contact for pricing",
-    timeline: "1-2 weeks",
-    category: "Legal Entity Structuring"
-  },
-  {
-    id: "foundation-panama",
-    name: "Panama Private Foundation",
-    jurisdiction: "Panama",
-    type: "Private Foundation",
-    description: "Panama Private Interest Foundation for asset protection and crypto project governance.",
-    features: [
-      "Asset protection",
-      "No taxation on foreign income",
-      "Founder privacy",
-      "Flexible management",
-      "Token treasury management"
-    ],
-    price: "Contact for pricing",
-    timeline: "2-4 weeks",
-    category: "Legal Entity Structuring"
-  },
-  {
-    id: "dao-wrapper-wyoming",
-    name: "Wyoming DAO LLC",
-    jurisdiction: "United States (Wyoming)",
-    type: "DAO LLC",
-    description: "First legally recognized DAO structure in the United States with limited liability protection.",
-    features: [
-      "Legal personality for DAO",
-      "Limited liability for members",
-      "Smart contract governance",
-      "On-chain voting recognition",
-      "US-based legal entity"
-    ],
-    price: "Contact for pricing",
-    timeline: "2-4 weeks",
-    category: "Legal Entity Structuring"
-  },
-  // MiCA Compliance
-  {
-    id: "mica-casp",
-    name: "EU MiCA CASP License",
-    jurisdiction: "European Union",
-    type: "Crypto-Asset Service Provider",
-    description: "Markets in Crypto-Assets Regulation (MiCA) compliant Crypto-Asset Service Provider authorization.",
-    features: [
-      "EU-wide operations",
-      "Custody and administration",
-      "Exchange services",
-      "Order execution",
-      "Advisory services"
-    ],
-    price: "Contact for pricing",
-    timeline: "6-12 months",
-    popular: true,
-    category: "MiCA Readiness"
-  },
-  {
-    id: "mica-stablecoin",
-    name: "MiCA Stablecoin Authorization",
-    jurisdiction: "European Union",
-    type: "E-Money Token / Asset-Referenced Token",
-    description: "MiCA authorization for stablecoin issuance as either E-Money Tokens (EMT) or Asset-Referenced Tokens (ART).",
-    features: [
-      "Stablecoin issuance",
-      "EU market access",
-      "Reserve requirements compliance",
-      "Whitepaper authorization",
-      "Redemption rights framework"
-    ],
-    price: "Contact for pricing",
-    timeline: "9-15 months",
-    category: "MiCA Readiness"
-  }
-];
-
-const categories = [
-  "All",
-  "VASP Registration",
-  "EMI & Payment Institution",
-  "MSB Registration",
-  "Legal Entity Structuring",
-  "MiCA Readiness"
-];
 
 // Buyer Form Component
 function BuyerForm() {
@@ -535,20 +222,6 @@ function SellerForm() {
 }
 
 export default function BuyLicensedEntity() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const filteredEntities = licensedEntities.filter((entity) => {
-    const matchesSearch = 
-      entity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      entity.jurisdiction.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      entity.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      entity.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()));
-    
-    const matchesCategory = selectedCategory === "All" || entity.category === selectedCategory;
-    
-    return matchesSearch && matchesCategory;
-  });
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -563,14 +236,14 @@ export default function BuyLicensedEntity() {
             className="text-center max-w-4xl mx-auto"
           >
             <Badge className="mb-4 bg-accent/10 text-accent hover:bg-accent/20">
-              Licensed Entities & Regulatory Structures
+              Licensed Entity Marketplace
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-              Buy Licensed Entities
+              Buy or Sell Licensed Entities
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8">
-              Acquire pre-licensed entities and regulatory structures across multiple jurisdictions. 
-              Fast-track your market entry with ready-to-operate licenses and legal frameworks.
+              Acquire pre-licensed entities or list your licensed entity for sale. 
+              Fast-track your market entry with ready-to-operate licenses.
             </p>
             
             {/* Stats */}
@@ -596,136 +269,58 @@ export default function BuyLicensedEntity() {
         </div>
       </section>
 
-      {/* Search and Filter Section */}
-      <section className="py-8 border-b border-border/50 sticky top-16 bg-background/95 backdrop-blur-md z-40">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            {/* Search */}
-            <div className="relative w-full md:w-96">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search licenses, jurisdictions..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-10"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-
-            {/* Category Filter */}
-            <div className="flex flex-wrap gap-2 justify-center">
-              {categories.map((category) => (
-                <Button
-                  key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedCategory(category)}
-                  className="text-xs"
-                >
-                  {category}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Entities Grid */}
+      {/* Buy or Sell Forms */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          {filteredEntities.length === 0 ? (
-            <div className="text-center py-16">
-              <Building2 className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-foreground mb-2">No entities found</h3>
-              <p className="text-muted-foreground">Try adjusting your search or filter criteria</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredEntities.map((entity, index) => (
-                <motion.div
-                  key={entity.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.05 }}
-                >
-                  <Card className="h-full flex flex-col hover:shadow-lg transition-all duration-300 border-border/50 hover:border-accent/50 group relative overflow-hidden">
-                    {entity.popular && (
-                      <div className="absolute top-4 right-4">
-                        <Badge className="bg-accent text-accent-foreground">
-                          <Star className="h-3 w-3 mr-1" />
-                          Popular
-                        </Badge>
-                      </div>
-                    )}
-                    <CardHeader className="pb-4">
-                      <div className="flex items-start gap-3">
-                        <div className="p-2 rounded-lg bg-primary/10">
-                          <Building2 className="h-5 w-5 text-primary" />
-                        </div>
-                        <div className="flex-1">
-                          <CardTitle className="text-lg group-hover:text-accent transition-colors">
-                            {entity.name}
-                          </CardTitle>
-                          <CardDescription className="flex items-center gap-1 mt-1">
-                            <MapPin className="h-3 w-3" />
-                            {entity.jurisdiction}
-                          </CardDescription>
-                        </div>
-                      </div>
-                      <Badge variant="outline" className="w-fit mt-2">
-                        {entity.type}
-                      </Badge>
-                    </CardHeader>
-                    <CardContent className="flex-1 flex flex-col">
-                      <p className="text-sm text-muted-foreground mb-4">
-                        {entity.description}
-                      </p>
-                      
-                      <div className="space-y-2 mb-4">
-                        {entity.features.slice(0, 4).map((feature, idx) => (
-                          <div key={idx} className="flex items-start gap-2">
-                            <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                            <span className="text-sm text-foreground/80">{feature}</span>
-                          </div>
-                        ))}
-                        {entity.features.length > 4 && (
-                          <span className="text-sm text-muted-foreground">
-                            +{entity.features.length - 4} more features
-                          </span>
-                        )}
-                      </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Buy Form */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <Card className="h-full border-accent/50">
+                <CardHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-3 rounded-full bg-accent/20">
+                      <ShoppingCart className="h-6 w-6 text-accent" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-2xl">I Want to Buy</CardTitle>
+                      <CardDescription>Acquire a licensed entity</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <BuyerForm />
+                </CardContent>
+              </Card>
+            </motion.div>
 
-                      <div className="mt-auto pt-4 border-t border-border/50">
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <Clock className="h-4 w-4" />
-                            <span>{entity.timeline}</span>
-                          </div>
-                          <div className="flex items-center gap-1 text-sm font-medium text-accent">
-                            <DollarSign className="h-4 w-4" />
-                            <span>{entity.price}</span>
-                          </div>
-                        </div>
-                        <Button className="w-full group/btn" asChild>
-                          <Link to={`/contact?entity=${entity.id}`}>
-                            Inquire Now
-                            <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                          </Link>
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          )}
+            {/* Sell Form */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <Card className="h-full border-border/50">
+                <CardHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-3 rounded-full bg-primary/20">
+                      <Store className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-2xl">I Want to Sell</CardTitle>
+                      <CardDescription>List your licensed entity</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <SellerForm />
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -744,7 +339,7 @@ export default function BuyLicensedEntity() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {/* Acquire Column */}
             <Card className="p-6 border-accent/50 bg-accent/5">
               <div className="flex items-center gap-3 mb-6">
@@ -802,38 +397,38 @@ export default function BuyLicensedEntity() {
               </div>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
-                  <X className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                  <Clock className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-medium text-foreground">6-24 months timeline</span>
-                    <p className="text-sm text-muted-foreground">Lengthy regulatory review and approval process</p>
+                    <span className="font-medium text-foreground">6-18+ months timeline</span>
+                    <p className="text-sm text-muted-foreground">Extended regulatory review and approval process</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <X className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                  <Clock className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-medium text-foreground">Uncertain outcome</span>
-                    <p className="text-sm text-muted-foreground">No guarantee of approval after extensive effort</p>
+                    <span className="font-medium text-foreground">Compliance from scratch</span>
+                    <p className="text-sm text-muted-foreground">Build all policies and procedures from the ground up</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <X className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                  <Clock className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-medium text-foreground">Build from scratch</span>
-                    <p className="text-sm text-muted-foreground">Must develop all policies, procedures, and relationships</p>
+                    <span className="font-medium text-foreground">Banking challenges</span>
+                    <p className="text-sm text-muted-foreground">Establishing banking relationships can be difficult</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <X className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                  <Clock className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-medium text-foreground">Higher regulatory scrutiny</span>
-                    <p className="text-sm text-muted-foreground">New applicants face stricter vetting</p>
+                    <span className="font-medium text-foreground">Approval uncertainty</span>
+                    <p className="text-sm text-muted-foreground">No guarantee of successful license approval</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <X className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                  <Clock className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-medium text-foreground">Escalating costs</span>
-                    <p className="text-sm text-muted-foreground">Legal fees, consultants, and revisions add up</p>
+                    <span className="font-medium text-foreground">Variable costs</span>
+                    <p className="text-sm text-muted-foreground">Application fees, legal costs, and ongoing expenses</p>
                   </div>
                 </li>
               </ul>
@@ -842,116 +437,7 @@ export default function BuyLicensedEntity() {
         </div>
       </section>
 
-      {/* What We Offer */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <Badge className="mb-4 bg-accent/10 text-accent hover:bg-accent/20">
-              Our Services
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              What We Offer
-            </h2>
-            <p className="text-muted-foreground">
-              Comprehensive support for both buyers and sellers of licensed entities.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* For Buyers */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card className="h-full p-8 border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-3 rounded-lg bg-primary/10">
-                    <Building2 className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-foreground">I Want to Buy</h3>
-                </div>
-                <p className="text-muted-foreground mb-6">
-                  Interested in acquiring a licensed entity? Fill out the form below and our team will get back to you.
-                </p>
-                <BuyerForm />
-              </Card>
-            </motion.div>
-
-            {/* For Sellers */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card className="h-full p-8 border-accent/30 bg-gradient-to-br from-accent/5 to-transparent">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-3 rounded-lg bg-accent/10">
-                    <Globe className="h-8 w-8 text-accent" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-foreground">I Want to Sell</h3>
-                </div>
-                <p className="text-muted-foreground mb-6">
-                  Looking to sell your licensed entity? Tell us about it and we'll connect you with qualified buyers.
-                </p>
-                <SellerForm />
-              </Card>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Key Jurisdictions */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
-              Global Coverage
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Key Jurisdictions
-            </h2>
-            <p className="text-muted-foreground">
-              We specialize in licensed entities across the world's most important financial and crypto regulatory hubs.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {[
-              { name: "United Arab Emirates", flag: "🇦🇪", types: "VARA, ADGM" },
-              { name: "Singapore", flag: "🇸🇬", types: "MAS PSL" },
-              { name: "Hong Kong", flag: "🇭🇰", types: "SFC VASP" },
-              { name: "European Union", flag: "🇪🇺", types: "MiCA, EMI" },
-              { name: "United Kingdom", flag: "🇬🇧", types: "FCA PI" },
-              { name: "Switzerland", flag: "🇨🇭", types: "Foundations" },
-              { name: "Lithuania", flag: "🇱🇹", types: "EMI, PI" },
-              { name: "United States", flag: "🇺🇸", types: "MSB, MTL" },
-              { name: "Canada", flag: "🇨🇦", types: "MSB" },
-              { name: "Cayman Islands", flag: "🇰🇾", types: "Foundations" },
-            ].map((jurisdiction, index) => (
-              <motion.div
-                key={jurisdiction.name}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-              >
-                <Card className="p-4 text-center hover:shadow-md hover:border-accent/50 transition-all cursor-pointer group">
-                  <div className="text-4xl mb-2">{jurisdiction.flag}</div>
-                  <h4 className="font-medium text-sm text-foreground group-hover:text-accent transition-colors">
-                    {jurisdiction.name}
-                  </h4>
-                  <p className="text-xs text-muted-foreground mt-1">{jurisdiction.types}</p>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
+      {/* Our Process */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-12">
@@ -962,55 +448,43 @@ export default function BuyLicensedEntity() {
               How It Works
             </h2>
             <p className="text-muted-foreground">
-              Our streamlined acquisition process ensures a smooth and efficient transaction.
+              Our streamlined process makes acquiring or selling licensed entities simple and efficient.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {[
               {
                 step: "01",
-                title: "Initial Consultation",
-                description: "Discuss your requirements, target jurisdictions, and timeline. We match you with suitable entities.",
-                icon: Building2
+                title: "Submit Inquiry",
+                description: "Fill out the form with your requirements or entity details"
               },
               {
                 step: "02",
-                title: "Due Diligence",
-                description: "Comprehensive review of entity documentation, compliance history, and regulatory standing.",
-                icon: FileCheck
+                title: "Consultation",
+                description: "Our team reviews and schedules a detailed consultation"
               },
               {
                 step: "03",
-                title: "Transaction & Filing",
-                description: "Structure the deal, prepare documentation, and submit change of control applications to regulators.",
-                icon: Shield
+                title: "Due Diligence",
+                description: "Comprehensive review and verification process"
               },
               {
                 step: "04",
-                title: "Transfer & Onboarding",
-                description: "Complete the transfer, update banking relationships, and hand over operational control.",
-                icon: Globe
+                title: "Transfer Complete",
+                description: "Finalize the transaction and ownership transfer"
               }
             ].map((item, index) => (
               <motion.div
                 key={item.step}
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
               >
-                <Card className="relative p-6 h-full border-border/50 hover:border-accent/50 transition-all group overflow-hidden">
-                  <div className="absolute top-4 right-4 text-6xl font-bold text-muted/20 group-hover:text-accent/10 transition-colors">
-                    {item.step}
-                  </div>
-                  <div className="relative z-10">
-                    <div className="p-3 rounded-lg bg-accent/10 w-fit mb-4">
-                      <item.icon className="h-6 w-6 text-accent" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-foreground mb-2">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground">{item.description}</p>
-                  </div>
+                <Card className="p-6 h-full text-center border-border/50 hover:border-accent/50 transition-colors">
+                  <div className="text-4xl font-bold text-accent/30 mb-4">{item.step}</div>
+                  <h3 className="text-lg font-bold text-foreground mb-2">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground">{item.description}</p>
                 </Card>
               </motion.div>
             ))}
@@ -1019,55 +493,33 @@ export default function BuyLicensedEntity() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-br from-primary/10 via-background to-accent/10">
+      <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
-          <Card className="bg-background/80 backdrop-blur-sm border-accent/20 shadow-lg">
-            <CardContent className="p-8 md:p-12">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                <div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                    Ready to Fast-Track Your Market Entry?
-                  </h2>
-                  <p className="text-muted-foreground mb-6">
-                    Whether you're looking to buy a licensed entity or sell your existing license, 
-                    our team of regulatory experts is here to guide you through every step.
-                  </p>
-                  <ul className="space-y-2 mb-8">
-                    <li className="flex items-center gap-2 text-sm text-foreground/80">
-                      <CheckCircle2 className="h-4 w-4 text-accent" />
-                      Free initial consultation
-                    </li>
-                    <li className="flex items-center gap-2 text-sm text-foreground/80">
-                      <CheckCircle2 className="h-4 w-4 text-accent" />
-                      Confidential and secure process
-                    </li>
-                    <li className="flex items-center gap-2 text-sm text-foreground/80">
-                      <CheckCircle2 className="h-4 w-4 text-accent" />
-                      Expert regulatory guidance
-                    </li>
-                  </ul>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <Button size="lg" className="w-full text-lg py-6" asChild>
-                    <Link to="/contact">
-                      Schedule a Consultation
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </Link>
-                  </Button>
-                  <Button size="lg" variant="outline" className="w-full" asChild>
-                    <Link to="/services">
-                      Explore Our Services
-                    </Link>
-                  </Button>
-                  <p className="text-center text-sm text-muted-foreground">
-                    Or email us directly at{" "}
-                    <a href="mailto:info@legumcompliance.com" className="text-accent hover:underline">
-                      info@legumcompliance.com
-                    </a>
-                  </p>
-                </div>
+          <Card className="p-8 md:p-12 bg-gradient-to-br from-primary/10 via-background to-accent/5 border-accent/20 max-w-4xl mx-auto">
+            <div className="text-center">
+              <Building2 className="h-12 w-12 text-accent mx-auto mb-6" />
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                Need Help Choosing?
+              </h2>
+              <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Not sure if acquiring a licensed entity is right for you? Browse our services 
+                to explore all available licensing and registration options.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" asChild>
+                  <Link to="/services">
+                    View All Services
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <Link to="/contact">
+                    Contact Us
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
               </div>
-            </CardContent>
+            </div>
           </Card>
         </div>
       </section>
