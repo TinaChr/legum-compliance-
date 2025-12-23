@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ServiceCategorySection, ServiceEntity } from "@/components/ServiceCategorySection";
 import { QuoteBuilder } from "@/components/QuoteBuilder";
+import { useScrollToHash } from "@/hooks/use-scroll-to-hash";
 import { 
   Building2, 
   ArrowRight, 
@@ -336,6 +337,7 @@ const categories = [
 ];
 
 export default function Services() {
+  useScrollToHash();
   const [searchQuery, setSearchQuery] = useState("");
   const [isQuoteBuilderOpen, setIsQuoteBuilderOpen] = useState(false);
   
