@@ -17,17 +17,14 @@ import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 
 const serviceOptions = [
-  { value: "isms", label: "Information Security Management Systems" },
-  { value: "data-protection", label: "Data Protection & Privacy Compliance" },
-  { value: "industry-specific", label: "Industry-Specific Compliance" },
-  { value: "cybersecurity", label: "Cybersecurity & Technical Compliance" },
-  { value: "web3-regulatory", label: "Web3 Regulatory & Licensing Compliance" },
-  { value: "aml-kyc", label: "AML/KYC & Financial Crime Prevention" },
-  { value: "token-governance", label: "Token Issuance & Governance Compliance" },
-  { value: "corporate-governance", label: "Corporate Governance & Risk Management" },
-  { value: "esg", label: "ESG & Responsible Innovation" },
-  { value: "training-advisory", label: "Training & Advisory Services" },
+  { value: "vasp-registration", label: "VASP Registration" },
+  { value: "emi-payment", label: "EMI & Payment Institution" },
+  { value: "msb-registration", label: "MSB Registration" },
+  { value: "legal-entity", label: "Legal Entity Structuring" },
+  { value: "mica-readiness", label: "MiCA Readiness" },
+  { value: "policy-templates", label: "Policy Templates" },
   { value: "quote-request", label: "Custom Quote Request" },
+  { value: "other", label: "Other" },
 ];
 
 // Quote item mappings
