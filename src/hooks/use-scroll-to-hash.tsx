@@ -10,7 +10,14 @@ export const useScrollToHash = () => {
       const timer = setTimeout(() => {
         const element = document.querySelector(hash);
         if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "start" });
+          const navbarHeight = 100; // Account for fixed navbar height
+          const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+          const offsetPosition = elementPosition - navbarHeight;
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          });
         }
       }, 100);
       return () => clearTimeout(timer);
