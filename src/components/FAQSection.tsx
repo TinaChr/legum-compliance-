@@ -5,16 +5,8 @@ import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
-    question: "Can you help with industry-specific compliance?",
-    answer: "Yes! We provide specialized support for telecommunications (NITDA guidelines), financial services (CBN regulations), healthcare (PHI handling), government contractors, and comprehensive Web3/blockchain compliance.",
-  },
-  {
     question: "How do you handle Web3 regulatory uncertainty?",
     answer: "We provide conservative compliance strategies that protect you under multiple regulatory scenarios, continuous regulatory monitoring, established regulator relationships, and multi-jurisdictional structuring to optimize positioning.",
-  },
-  {
-    question: "Do you support organizations outside Nigeria?",
-    answer: "Yes. While our headquarters is in Abuja, Nigeria, we serve African organizations across West, East, and Southern Africa; global Web3 organizations; international companies entering African markets; and organizations requiring compliance across North America, Europe, and Asia-Pacific.",
   },
   {
     question: "What if regulations change after implementation?",
