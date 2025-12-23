@@ -12,6 +12,7 @@ import { useCart } from "@/contexts/CartContext";
 import { Input } from "@/components/ui/input";
 import { DocumentPreviewDialog } from "@/components/DocumentPreviewDialog";
 import { toast } from "sonner";
+import { useScrollToHash } from "@/hooks/use-scroll-to-hash";
 
 export interface DocumentItem {
   id: string;
@@ -362,6 +363,7 @@ const documentCategories: DocumentCategory[] = [
 ];
 
 const Documents = () => {
+  useScrollToHash();
   const { addItem, items } = useCart();
   const [previewDocument, setPreviewDocument] = useState<DocumentItem | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
