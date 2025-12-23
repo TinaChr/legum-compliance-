@@ -18,7 +18,7 @@ export interface DocumentItem {
   title: string;
   description: string;
   price: number;
-  type: "framework" | "policy";
+  type: "policy";
   features: string[];
 }
 
@@ -34,17 +34,9 @@ const documentCategories: DocumentCategory[] = [
   {
     id: "isms",
     title: "Information Security Management Systems",
-    description: "Comprehensive security frameworks including NIST CSF, ISO 27001, SOC 2, and ISO 22301",
+    description: "Comprehensive security policies including NIST CSF, ISO 27001, SOC 2, and ISO 22301",
     icon: <Shield className="w-6 h-6" />,
     documents: [
-      {
-        id: "nist-csf-framework",
-        title: "NIST CSF Implementation Framework",
-        description: "Complete NIST Cybersecurity Framework implementation package with Risk Management and Continuous Monitoring frameworks.",
-        price: 450,
-        type: "framework",
-        features: ["NIST CSF Implementation Framework", "Risk Management Framework (RMF)", "Continuous Monitoring Framework", "Control Mapping Documentation"]
-      },
       {
         id: "nist-csf-policies",
         title: "NIST CSF Policy Bundle",
@@ -52,14 +44,6 @@ const documentCategories: DocumentCategory[] = [
         price: 350,
         type: "policy",
         features: ["Identify Function Policy", "Protect Function Policy", "Detect Function Policy", "Respond & Recover Policies", "Maturity Assessment Methodology"]
-      },
-      {
-        id: "iso27001-framework",
-        title: "ISO 27001 ISMS Framework",
-        description: "Complete Information Security Management System framework with risk assessment and audit frameworks.",
-        price: 600,
-        type: "framework",
-        features: ["ISMS Framework", "Risk Assessment Framework", "Internal Audit Framework", "Management Review Framework"]
       },
       {
         id: "iso27001-policies",
@@ -70,28 +54,12 @@ const documentCategories: DocumentCategory[] = [
         features: ["Information Security Policy (Master)", "Access Control & Asset Management", "Business Continuity & Incident Management", "All 25+ Required Policies", "Statement of Applicability"]
       },
       {
-        id: "soc2-framework",
-        title: "SOC 2 Trust Services Framework",
-        description: "Trust Services Criteria Framework with control environment and evidence collection frameworks.",
-        price: 500,
-        type: "framework",
-        features: ["Trust Services Criteria Framework", "Control Environment Framework", "Vendor Risk Management Framework", "Evidence Collection Framework"]
-      },
-      {
         id: "soc2-policies",
         title: "SOC 2 Policy Bundle",
         description: "Security, Availability, Processing Integrity, Confidentiality, and Privacy policies with control matrix.",
         price: 450,
         type: "policy",
         features: ["Security Policies (CC6.1-CC6.8)", "Availability & Processing Integrity", "Confidentiality & Privacy Policies", "System Description", "Control Matrix & Audit Checklist"]
-      },
-      {
-        id: "iso22301-framework",
-        title: "ISO 22301 Business Continuity Framework",
-        description: "Business Continuity Management System with BIA, Disaster Recovery, and Crisis Management frameworks.",
-        price: 400,
-        type: "framework",
-        features: ["BCMS Framework", "Business Impact Analysis Framework", "Disaster Recovery Framework", "Crisis Management Framework"]
       },
       {
         id: "iso22301-policies",
@@ -106,17 +74,9 @@ const documentCategories: DocumentCategory[] = [
   {
     id: "data-protection",
     title: "Data Protection & Privacy Compliance",
-    description: "GDPR, NDPR, CCPA, PIPEDA, POPIA, and blockchain-specific privacy frameworks and policies",
+    description: "GDPR, NDPR, CCPA, and privacy policy templates",
     icon: <Lock className="w-6 h-6" />,
     documents: [
-      {
-        id: "gdpr-framework",
-        title: "GDPR Compliance Framework",
-        description: "Complete Data Protection Management Framework with Privacy by Design and Cross-Border Transfer frameworks.",
-        price: 550,
-        type: "framework",
-        features: ["Data Protection Management Framework", "Privacy by Design Framework", "Data Subject Rights Framework", "Cross-Border Transfer Framework"]
-      },
       {
         id: "gdpr-policies",
         title: "GDPR Policy Bundle (10+ Policies)",
@@ -124,14 +84,6 @@ const documentCategories: DocumentCategory[] = [
         price: 500,
         type: "policy",
         features: ["Data Protection Policy (Master)", "Data Processing & Retention Policies", "Data Subject Rights Policy", "DPIAs & Privacy Notices", "DPAs & SCCs"]
-      },
-      {
-        id: "ndpr-framework",
-        title: "NDPR Nigeria Compliance Framework",
-        description: "NITDA Compliance Framework with DPCO and Annual Audit frameworks for Nigeria.",
-        price: 400,
-        type: "framework",
-        features: ["NITDA Compliance Framework", "DPCO Framework", "Annual Audit Framework", "NITDA Reporting Templates"]
       },
       {
         id: "ndpr-policies",
@@ -142,45 +94,21 @@ const documentCategories: DocumentCategory[] = [
         features: ["NDPR Compliance Policy", "Consent Management Policy", "Breach Notification Policy (72-hour)", "International Data Transfer Policy", "DPCO Designation Documentation"]
       },
       {
-        id: "ccpa-framework",
-        title: "CCPA Compliance Framework",
-        description: "Consumer Rights Management and Data Sale Opt-Out frameworks for California compliance.",
-        price: 350,
-        type: "framework",
-        features: ["Consumer Rights Framework", "Data Sale Opt-Out Framework", "DSAR Processing Framework", "Authorized Agent Verification"]
-      },
-      {
         id: "ccpa-policies",
         title: "CCPA Policy Bundle",
         description: "California Consumer Privacy Act policies including Do Not Sell and Service Provider management.",
         price: 300,
         type: "policy",
         features: ["CCPA Compliance Policy", "Consumer Rights Policy", "Do Not Sell Policy", "Service Provider Management", "Privacy Notice (CCPA format)"]
-      },
-      {
-        id: "blockchain-privacy",
-        title: "Blockchain Privacy Framework & Policies",
-        description: "Specialized on-chain privacy framework with zero-knowledge proof and immutable ledger considerations.",
-        price: 450,
-        type: "framework",
-        features: ["On-Chain Privacy Framework", "Zero-Knowledge Proof Framework", "Immutable Ledger Privacy", "Data Minimization Policy", "Right to Erasure Solutions"]
       }
     ]
   },
   {
     id: "industry-specific",
     title: "Industry-Specific Compliance",
-    description: "Financial services, PCI DSS, telecommunications, and healthcare compliance frameworks",
+    description: "Financial services, PCI DSS, and healthcare compliance policies",
     icon: <Building className="w-6 h-6" />,
     documents: [
-      {
-        id: "nigeria-finserv-framework",
-        title: "Nigeria Financial Services Framework",
-        description: "CBN Compliance Framework with Banking Security and Fintech Regulatory frameworks.",
-        price: 500,
-        type: "framework",
-        features: ["CBN Compliance Framework", "Banking Security Framework", "Fintech Regulatory Framework", "Payment Processor Security"]
-      },
       {
         id: "nigeria-finserv-policies",
         title: "Nigeria Financial Services Policies",
@@ -190,36 +118,12 @@ const documentCategories: DocumentCategory[] = [
         features: ["CBN Regulatory Compliance Policy", "Banking Security Standards", "Financial Crime Prevention", "Customer Due Diligence Policy"]
       },
       {
-        id: "pci-dss-framework",
-        title: "PCI DSS Compliance Framework",
-        description: "Payment Card Industry framework with network segmentation and CDE frameworks.",
-        price: 550,
-        type: "framework",
-        features: ["PCI DSS Compliance Framework", "Network Segmentation Framework", "CDE Framework", "Quarterly Validation Framework"]
-      },
-      {
         id: "pci-dss-policies",
         title: "PCI DSS Policy Bundle (12+ Policies)",
         description: "Complete PCI DSS policy set with all 12 requirements covered plus additional documents.",
         price: 600,
         type: "policy",
         features: ["PCI DSS Compliance Policy (Master)", "Cardholder Data Protection", "Access Control & Encryption", "Vulnerability Management", "Penetration Testing Policy"]
-      },
-      {
-        id: "telecom-nigeria-framework",
-        title: "Nigeria Telecommunications Framework",
-        description: "NITDA Telecommunications Framework with infrastructure security and service availability.",
-        price: 350,
-        type: "framework",
-        features: ["NITDA Telecom Framework", "Infrastructure Security Framework", "Service Availability Framework", "SLA Policy"]
-      },
-      {
-        id: "hitrust-csf-framework",
-        title: "HITRUST CSF Healthcare Framework",
-        description: "HITRUST CSF Implementation Framework with PHI protection and healthcare security.",
-        price: 500,
-        type: "framework",
-        features: ["HITRUST CSF Framework", "PHI Protection Framework", "Healthcare Security Framework", "HIPAA Alignment Policy"]
       },
       {
         id: "hitrust-policies",
@@ -234,17 +138,9 @@ const documentCategories: DocumentCategory[] = [
   {
     id: "cybersecurity",
     title: "Cybersecurity & Technical Compliance",
-    description: "VAPT, smart contract audits, and security operations frameworks and policies",
+    description: "VAPT, smart contract audits, and security operations policies",
     icon: <AlertTriangle className="w-6 h-6" />,
     documents: [
-      {
-        id: "vapt-framework",
-        title: "VAPT Framework Bundle",
-        description: "Vulnerability Assessment & Penetration Testing frameworks with remediation validation.",
-        price: 400,
-        type: "framework",
-        features: ["Vulnerability Management Framework", "Penetration Testing Framework", "Remediation Validation Framework", "VAPT Methodology Documentation"]
-      },
       {
         id: "vapt-policies",
         title: "VAPT Policy Bundle",
@@ -254,28 +150,12 @@ const documentCategories: DocumentCategory[] = [
         features: ["Vulnerability Management Policy", "Penetration Testing Policy", "Patch Management Policy", "Rules of Engagement (ROE)", "Remediation Tracking Matrix"]
       },
       {
-        id: "smart-contract-framework",
-        title: "Smart Contract Security Framework",
-        description: "Smart Contract Audit Framework with multi-firm coordination and formal verification.",
-        price: 500,
-        type: "framework",
-        features: ["Smart Contract Audit Framework", "Multi-Firm Coordination Framework", "Formal Verification Framework", "Vulnerability Classification Matrix"]
-      },
-      {
         id: "smart-contract-policies",
         title: "Smart Contract Security Policies",
         description: "Smart contract security policies with code review and economic security review.",
         price: 400,
         type: "policy",
         features: ["Smart Contract Security Policy", "Code Review Policy", "Vulnerability Classification Policy", "Economic Security Review Policy", "Remediation Guidelines"]
-      },
-      {
-        id: "secops-framework",
-        title: "Security Operations Framework",
-        description: "SOC Framework with SIEM implementation, incident response, and threat intelligence.",
-        price: 450,
-        type: "framework",
-        features: ["SOC Framework", "SIEM Implementation Framework", "Incident Response Framework", "Threat Intelligence Framework"]
       },
       {
         id: "secops-policies",
@@ -290,17 +170,9 @@ const documentCategories: DocumentCategory[] = [
   {
     id: "web3-regulatory",
     title: "Web3 Regulatory & Licensing",
-    description: "MSB registration, VASP licensing, MiCA readiness, and regulatory classification",
+    description: "MSB, VASP, and MiCA compliance policies",
     icon: <Globe className="w-6 h-6" />,
     documents: [
-      {
-        id: "msb-framework",
-        title: "MSB Registration Framework",
-        description: "Money Services Business frameworks for FinCEN, FINTRAC, and state licensing.",
-        price: 600,
-        type: "framework",
-        features: ["FinCEN Compliance Framework", "FINTRAC Compliance Framework", "State Money Transmitter Framework", "Compliance Program Manual"]
-      },
       {
         id: "msb-policies",
         title: "MSB Compliance Policy Bundle",
@@ -308,14 +180,6 @@ const documentCategories: DocumentCategory[] = [
         price: 500,
         type: "policy",
         features: ["MSB Compliance Program Policy", "AML & BSA Compliance Policies", "State Licensing Compliance", "Transaction & SAR Reporting"]
-      },
-      {
-        id: "vasp-framework",
-        title: "VASP Registration Framework",
-        description: "FATF-aligned VASP framework with multi-jurisdictional registration guidance.",
-        price: 650,
-        type: "framework",
-        features: ["FATF-Aligned VASP Framework", "Multi-Jurisdictional Framework", "UAE/Singapore/HK Documentation", "Travel Rule Compliance"]
       },
       {
         id: "vasp-policies",
@@ -326,61 +190,21 @@ const documentCategories: DocumentCategory[] = [
         features: ["VASP Compliance Policy", "Virtual Asset Handling Policy", "Travel Rule Compliance Policy", "Customer Due Diligence (VASP)"]
       },
       {
-        id: "mica-framework",
-        title: "MiCA Readiness Framework",
-        description: "EU Markets in Crypto-Assets framework with white paper and authorization procedures.",
-        price: 700,
-        type: "framework",
-        features: ["MiCA Compliance Framework", "White Paper Preparation Framework", "Token Authorization Framework", "MiCA Gap Analysis Report"]
-      },
-      {
         id: "mica-policies",
         title: "MiCA Compliance Policy Bundle",
         description: "Complete MiCA policy set with crypto-asset classification and ongoing monitoring.",
         price: 600,
         type: "policy",
         features: ["MiCA Compliance Policy", "Crypto-Asset Classification", "White Paper Disclosure Policy", "Authorization Requirements", "Ongoing Compliance Monitoring"]
-      },
-      {
-        id: "emi-pi-framework",
-        title: "EMI & Payment Institution Framework",
-        description: "Electronic Money Institution and Payment Institution licensing frameworks.",
-        price: 550,
-        type: "framework",
-        features: ["EMI Framework", "Payment Institution Framework", "Stablecoin Issuer Framework", "Safeguarding Requirements"]
-      },
-      {
-        id: "regulatory-classification",
-        title: "Regulatory Classification Framework",
-        description: "Digital asset classification with Howey Test and multi-jurisdictional analysis.",
-        price: 500,
-        type: "framework",
-        features: ["Digital Asset Classification", "Howey Test Framework", "Multi-Jurisdictional Analysis", "Exemption Strategy Documentation"]
-      },
-      {
-        id: "legal-entity-structuring",
-        title: "Legal Entity Structuring Framework",
-        description: "DAO legal wrappers, foundation setup, and multi-jurisdictional structures.",
-        price: 600,
-        type: "framework",
-        features: ["DAO Legal Wrapper Framework", "Foundation Setup Framework", "Multi-Jurisdictional Structure", "SPV Structure Policy"]
       }
     ]
   },
   {
     id: "aml-kyc",
     title: "AML/KYC & Financial Crime Prevention",
-    description: "Comprehensive AML/CTF programs, KYC infrastructure, transaction monitoring, and sanctions compliance",
+    description: "AML/CTF programs, KYC, transaction monitoring, and sanctions compliance policies",
     icon: <Scale className="w-6 h-6" />,
     documents: [
-      {
-        id: "aml-ctf-framework",
-        title: "AML/CTF Program Framework",
-        description: "FATF-compliant AML/CTF framework with risk-based approach and three lines of defense.",
-        price: 650,
-        type: "framework",
-        features: ["FATF-Compliant AML/CTF Framework", "Risk-Based Approach Framework", "Three Lines of Defense", "Transaction Monitoring Framework"]
-      },
       {
         id: "aml-ctf-policies",
         title: "AML/CTF Policy Bundle (10+ Policies)",
@@ -388,14 +212,6 @@ const documentCategories: DocumentCategory[] = [
         price: 600,
         type: "policy",
         features: ["AML/CTF Program Policy (Master)", "CDD & EDD Policies", "Transaction Monitoring Policy", "SAR Policy", "Governance & Oversight Policy"]
-      },
-      {
-        id: "kyc-cdd-framework",
-        title: "KYC/CDD Infrastructure Framework",
-        description: "Know Your Customer framework with CDD, EDD, and ongoing monitoring frameworks.",
-        price: 500,
-        type: "framework",
-        features: ["KYC Framework", "CDD & EDD Frameworks", "Ongoing Monitoring Framework", "Customer Risk Rating Methodology"]
       },
       {
         id: "kyc-cdd-policies",
@@ -406,28 +222,12 @@ const documentCategories: DocumentCategory[] = [
         features: ["KYC & CIP Policies", "Beneficial Ownership Policy", "PEP & Sanctions Screening", "Adverse Media Screening", "Periodic Review Policy"]
       },
       {
-        id: "transaction-monitoring-framework",
-        title: "Transaction Monitoring Framework",
-        description: "Transaction monitoring with blockchain analytics and alert management frameworks.",
-        price: 450,
-        type: "framework",
-        features: ["Transaction Monitoring Framework", "Blockchain Analytics Framework", "Alert Management Framework", "SAR/STR Filing Framework"]
-      },
-      {
         id: "transaction-monitoring-policies",
         title: "Transaction Monitoring Policy Bundle",
         description: "Transaction monitoring policies with crypto-specific rules and mixing detection.",
         price: 400,
         type: "policy",
         features: ["Transaction Monitoring Policy", "Alert Management Policy", "Blockchain Analytics Policy", "Typology Detection Policy", "Mixing/Layering Detection"]
-      },
-      {
-        id: "sanctions-framework",
-        title: "Sanctions Compliance Framework",
-        description: "Multi-jurisdictional sanctions framework with wallet address screening.",
-        price: 400,
-        type: "framework",
-        features: ["Sanctions Screening Framework", "Multi-Jurisdictional Framework", "Wallet Address Screening", "Real-Time Screening Protocols"]
       },
       {
         id: "sanctions-policies",
@@ -442,17 +242,9 @@ const documentCategories: DocumentCategory[] = [
   {
     id: "token-governance",
     title: "Token Issuance & Governance",
-    description: "Securities law compliance, whitepaper review, tokenomics, and DAO governance",
+    description: "Securities law, whitepaper, tokenomics, and DAO governance policies",
     icon: <Coins className="w-6 h-6" />,
     documents: [
-      {
-        id: "securities-framework",
-        title: "Securities Law Compliance Framework",
-        description: "Securities law analysis with Howey Test and multi-jurisdictional offering frameworks.",
-        price: 600,
-        type: "framework",
-        features: ["Securities Law Analysis Framework", "Howey Test Framework", "Exemption Strategy Framework", "Multi-Jurisdictional Offering"]
-      },
       {
         id: "securities-policies",
         title: "Securities Law Policy Bundle",
@@ -460,14 +252,6 @@ const documentCategories: DocumentCategory[] = [
         price: 550,
         type: "policy",
         features: ["Securities Compliance Policy", "Reg D (506b/506c) Policy", "Reg S & Reg CF Policies", "Reg A+ Policy", "SEC Compliance Documentation"]
-      },
-      {
-        id: "whitepaper-framework",
-        title: "Whitepaper Legal Review Framework",
-        description: "Risk disclosure and forward-looking statements frameworks with review checklists.",
-        price: 350,
-        type: "framework",
-        features: ["Risk Disclosure Framework", "Forward-Looking Statements", "Regulatory Compliance Review", "Jurisdictional Disclaimers"]
       },
       {
         id: "whitepaper-policies",
@@ -478,28 +262,12 @@ const documentCategories: DocumentCategory[] = [
         features: ["Whitepaper Publication Policy", "Risk Disclosure Policy", "Forward-Looking Statements", "Misrepresentation Prevention", "Safe Harbor Language"]
       },
       {
-        id: "tokenomics-framework",
-        title: "Tokenomics Compliance Framework",
-        description: "Token distribution, vesting, and utility analysis frameworks.",
-        price: 450,
-        type: "framework",
-        features: ["Token Distribution Framework", "Vesting & Lock-Up Framework", "Token Utility Analysis", "Secondary Market Considerations"]
-      },
-      {
         id: "tokenomics-policies",
         title: "Tokenomics Compliance Policy Bundle",
         description: "Complete tokenomics policies covering distribution, vesting, and supply mechanics.",
         price: 400,
         type: "policy",
         features: ["Tokenomics Compliance Policy", "Distribution Mechanism Policy", "Vesting & Lock-Up Policy", "Airdrop & Incentive Policy", "Supply Mechanics Policy"]
-      },
-      {
-        id: "dao-governance-framework",
-        title: "DAO Governance Framework",
-        description: "DAO legal integration with governance token and treasury management frameworks.",
-        price: 550,
-        type: "framework",
-        features: ["DAO Legal Integration", "Governance Token Framework", "Decentralization Pathway", "Treasury Management Framework"]
       },
       {
         id: "dao-governance-policies",
@@ -514,17 +282,9 @@ const documentCategories: DocumentCategory[] = [
   {
     id: "corporate-governance",
     title: "Corporate Governance & Risk Management",
-    description: "Internal compliance, board governance, and enterprise risk management frameworks",
+    description: "Internal compliance, board governance, and enterprise risk management policies",
     icon: <Users className="w-6 h-6" />,
     documents: [
-      {
-        id: "internal-compliance-framework",
-        title: "Internal Compliance Framework",
-        description: "Three lines of defense with compliance management and policy management frameworks.",
-        price: 500,
-        type: "framework",
-        features: ["Three Lines of Defense", "Compliance Management Framework", "Control Environment Framework", "Policy Management Framework"]
-      },
       {
         id: "internal-compliance-policies",
         title: "Internal Compliance Policy Bundle",
@@ -534,28 +294,12 @@ const documentCategories: DocumentCategory[] = [
         features: ["Compliance Framework Policy", "Code of Conduct", "Ethics & Whistleblower Policy", "Compliance Testing Policy", "Issue Management Policy"]
       },
       {
-        id: "board-governance-framework",
-        title: "Board & Governance Framework",
-        description: "Corporate governance with board oversight and delegation of authority frameworks.",
-        price: 450,
-        type: "framework",
-        features: ["Corporate Governance Framework", "Board Oversight Framework", "Delegation of Authority", "Committee Terms of Reference"]
-      },
-      {
         id: "board-governance-policies",
         title: "Board & Governance Policy Bundle",
         description: "Board charter, committee charters, and conflict of interest policies.",
         price: 400,
         type: "policy",
         features: ["Board Charter", "Committee Charters (Audit/Risk/Compliance)", "Delegation of Authority Policy", "Conflict of Interest Policy", "Related Party Transaction Policy"]
-      },
-      {
-        id: "erm-framework",
-        title: "Enterprise Risk Management Framework",
-        description: "ERM framework with risk assessment and monitoring frameworks.",
-        price: 400,
-        type: "framework",
-        features: ["ERM Framework", "Risk Assessment Framework", "Risk Monitoring Framework", "Risk Heat Maps"]
       },
       {
         id: "erm-policies",
@@ -570,17 +314,9 @@ const documentCategories: DocumentCategory[] = [
   {
     id: "esg",
     title: "ESG & Responsible Innovation",
-    description: "Environmental, social, and governance policies with responsible AI and digital ethics",
+    description: "Environmental, social, governance policies and responsible AI",
     icon: <Leaf className="w-6 h-6" />,
     documents: [
-      {
-        id: "esg-framework",
-        title: "ESG Policy Development Framework",
-        description: "Complete ESG framework with carbon footprint assessment and sustainability frameworks.",
-        price: 450,
-        type: "framework",
-        features: ["ESG Framework", "Carbon Footprint Assessment", "Sustainability Framework", "Stakeholder Engagement Framework"]
-      },
       {
         id: "esg-policies",
         title: "ESG Policy Bundle (10+ Policies)",
@@ -588,14 +324,6 @@ const documentCategories: DocumentCategory[] = [
         price: 400,
         type: "policy",
         features: ["ESG Policy (Master)", "Environmental & Carbon Policies", "Climate Strategy Policy", "Social Impact Policy", "Governance Transparency Policy"]
-      },
-      {
-        id: "responsible-ai-framework",
-        title: "Responsible AI & Digital Ethics Framework",
-        description: "AI ethics framework with algorithm fairness and privacy-preserving AI frameworks.",
-        price: 500,
-        type: "framework",
-        features: ["AI Ethics Framework", "Algorithm Fairness Framework", "Privacy-Preserving AI", "AI Governance Framework"]
       },
       {
         id: "responsible-ai-policies",
@@ -610,17 +338,9 @@ const documentCategories: DocumentCategory[] = [
   {
     id: "training-advisory",
     title: "Training & Advisory Services",
-    description: "Compliance training programs and ongoing advisory support frameworks",
+    description: "Compliance training programs and ongoing advisory support policies",
     icon: <GraduationCap className="w-6 h-6" />,
     documents: [
-      {
-        id: "training-framework",
-        title: "Compliance Training Framework",
-        description: "Security awareness and compliance training frameworks with board training.",
-        price: 350,
-        type: "framework",
-        features: ["Security Awareness Training", "Compliance Training Framework", "Board Training Framework", "Training Curriculum by Role"]
-      },
       {
         id: "training-policies",
         title: "Training & Awareness Policy Bundle",
@@ -628,14 +348,6 @@ const documentCategories: DocumentCategory[] = [
         price: 300,
         type: "policy",
         features: ["Training & Awareness Policy", "Security Awareness Policy", "Compliance Training Policy", "Board Training Policy", "Developer Training Program"]
-      },
-      {
-        id: "advisory-framework",
-        title: "Ongoing Advisory Framework",
-        description: "Fractional CCO framework with regulatory monitoring and incident response advisory.",
-        price: 400,
-        type: "framework",
-        features: ["Fractional CCO Framework", "Regulatory Monitoring Framework", "Incident Response Advisory", "CCO Service Level Agreement"]
       },
       {
         id: "advisory-policies",
@@ -704,17 +416,17 @@ const Documents = () => {
             
             <div className="max-w-4xl">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                Compliance Frameworks
-                <span className="text-gradient"> & Policy Templates</span>
+                Compliance
+                <span className="text-gradient"> Policy Templates</span>
               </h1>
               <p className="text-lg md:text-xl text-blue-100/80 leading-relaxed mb-4">
-                Professional-grade compliance documentation covering 10 major regulatory areas. 
-                From ISMS and data protection to Web3 licensing and ESG frameworks.
+                Professional-grade policy documentation covering 10 major regulatory areas. 
+                From ISMS and data protection to Web3 licensing and ESG policies.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Badge variant="outline" className="bg-white/10 text-white border-white/20 px-3 py-1">
                   <Shield className="w-3 h-3 mr-1" />
-                  100+ Documents
+                  50+ Policies
                 </Badge>
                 <Badge variant="outline" className="bg-white/10 text-white border-white/20 px-3 py-1">
                   <FileText className="w-3 h-3 mr-1" />
@@ -807,10 +519,10 @@ const Documents = () => {
                       <CardHeader className="pb-3">
                         <div className="flex items-start justify-between mb-2">
                           <Badge 
-                            variant={doc.type === "framework" ? "default" : "secondary"}
-                            className={doc.type === "framework" ? "bg-blue-600 hover:bg-blue-700" : "bg-emerald-600 hover:bg-emerald-700 text-white"}
+                            variant="secondary"
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white"
                           >
-                            {doc.type === "framework" ? "Framework" : "Policy"}
+                            Policy
                           </Badge>
                           <span className="text-xl font-bold text-primary">${doc.price}</span>
                         </div>
