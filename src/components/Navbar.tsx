@@ -32,16 +32,15 @@ const navLinks: NavLink[] = [
     ]
   },
   { 
-    name: "Documents", 
+    name: "Policy Templates", 
     href: "/documents", 
     isPage: true,
     subItems: [
-      { name: "ISO 27001 Framework", href: "/documents#iso-27001", isPage: true },
-      { name: "SOC 2 Framework", href: "/documents#soc-2", isPage: true },
-      { name: "GDPR Framework", href: "/documents#gdpr", isPage: true },
-      { name: "NDPR Framework", href: "/documents#ndpr", isPage: true },
-      { name: "AML/CFT Framework", href: "/documents#aml-cft", isPage: true },
-      { name: "MiCA Compliance", href: "/documents#mica", isPage: true },
+      { name: "ISMS Policies", href: "/documents#isms", isPage: true },
+      { name: "Data Protection", href: "/documents#data-protection", isPage: true },
+      { name: "AML/KYC Policies", href: "/documents#aml-kyc", isPage: true },
+      { name: "Web3 Regulatory", href: "/documents#web3-regulatory", isPage: true },
+      { name: "Token Governance", href: "/documents#token-governance", isPage: true },
       { name: "Corporate Governance", href: "/documents#corporate-governance", isPage: true },
     ]
   },
