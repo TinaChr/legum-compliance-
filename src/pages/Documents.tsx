@@ -7,7 +7,6 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CartDrawer } from "@/components/CartDrawer";
 import { useCart } from "@/contexts/CartContext";
 import { Input } from "@/components/ui/input";
 import { DocumentPreviewDialog } from "@/components/DocumentPreviewDialog";
@@ -405,7 +404,7 @@ const Documents = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="flex items-center justify-between mb-8">
+            <div className="mb-8">
               <Link
                 to="/"
                 className="inline-flex items-center gap-2 text-blue-300 hover:text-white transition-colors"
@@ -413,7 +412,6 @@ const Documents = () => {
                 <ArrowLeft className="w-4 h-4" />
                 Back to Home
               </Link>
-              <CartDrawer />
             </div>
             
             <div className="max-w-4xl">

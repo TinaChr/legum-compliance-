@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { CartDrawer } from "@/components/CartDrawer";
 import logo from "@/assets/logo.png";
 
 interface SubItem {
@@ -161,8 +162,9 @@ export const Navbar = () => {
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden lg:block">
+          {/* Cart & CTA Button */}
+          <div className="hidden lg:flex items-center gap-3">
+            <CartDrawer />
             <Button variant={isScrolled ? "hero" : "heroOutline"} size="default" asChild>
               <a href="https://calendly.com/chioma-legum/30min" target="_blank" rel="noopener noreferrer">
                 Book a Call
@@ -247,11 +249,14 @@ export const Navbar = () => {
                     )}
                   </div>
                 ))}
-                <Button variant="hero" size="default" className="mt-2" asChild>
-                  <a href="https://calendly.com/chioma-legum/30min" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)}>
-                    Book a Call
-                  </a>
-                </Button>
+                <div className="flex items-center gap-3 mt-4 pt-4 border-t border-border">
+                  <CartDrawer />
+                  <Button variant="hero" size="default" className="flex-1" asChild>
+                    <a href="https://calendly.com/chioma-legum/30min" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)}>
+                      Book a Call
+                    </a>
+                  </Button>
+                </div>
               </div>
             </motion.div>
           )}
