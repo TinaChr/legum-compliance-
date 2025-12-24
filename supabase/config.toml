@@ -1,1 +1,4 @@
 project_id = "kfynbbhsnxlrcbtezpdl"
+
+[functions.send-documents]
+verify_jwt = false
