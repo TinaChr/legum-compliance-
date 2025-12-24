@@ -9,6 +9,7 @@ import Services from "./pages/Services";
 import Documents from "./pages/Documents";
 import Contact from "./pages/Contact";
 import BuyLicensedEntity from "./pages/BuyLicensedEntity";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/documents" element={<Documents />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/buy-licensed-entity" element={<BuyLicensedEntity />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
