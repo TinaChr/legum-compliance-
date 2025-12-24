@@ -1,16 +1,24 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ShoppingCart, X, Plus, Minus, Trash2 } from "lucide-react";
+import { ShoppingCart, X, Plus, Minus, Trash2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useCart } from "@/contexts/CartContext";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { CheckoutForm } from "@/components/CheckoutForm";
 
 export const CartDrawer = () => {
   const { items, removeItem, updateQuantity, total, itemCount, clearCart } = useCart();
+  const [showCheckout, setShowCheckout] = useState(false);
+
+  const handleCheckoutSuccess = () => {
+    // Reset to cart view after successful checkout
+    setShowCheckout(false);
+  };
 
   return (
-    <Sheet>
+    <Sheet onOpenChange={(open) => !open && setShowCheckout(false)}>
       <SheetTrigger asChild>
         <Button variant="outline" size="icon" className="relative">
           <ShoppingCart className="h-5 w-5" />
@@ -23,21 +31,36 @@ export const CartDrawer = () => {
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent className="flex flex-col w-full sm:max-w-md">
+      <SheetContent className="flex flex-col w-full sm:max-w-md overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <ShoppingCart className="h-5 w-5" />
-            Your Cart ({itemCount} items)
+            {showCheckout ? "Checkout" : `Your Cart (${itemCount} items)`}
           </SheetTitle>
         </SheetHeader>
 
-        {items.length === 0 ? (
+        {showCheckout ? (
+          <div className="flex-1 py-4">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setShowCheckout(false)}
+              className="mb-4"
+            >
+              ← Back to Cart
+            </Button>
+            <CheckoutForm onSuccess={handleCheckoutSuccess} />
+          </div>
+        ) : items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
             <ShoppingCart className="h-16 w-16 text-muted-foreground/50 mb-4" />
             <p className="text-lg font-medium text-foreground mb-2">Your cart is empty</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground mb-4">
               Browse our document templates and add items to your cart.
             </p>
+            <Button variant="outline" asChild>
+              <Link to="/documents">Browse Documents</Link>
+            </Button>
           </div>
         ) : (
           <>
@@ -93,8 +116,13 @@ export const CartDrawer = () => {
               </div>
               
               <div className="space-y-2">
-                <Button className="w-full" size="lg" asChild>
-                  <Link to="/contact">Proceed to Checkout</Link>
+                <Button 
+                  className="w-full" 
+                  size="lg" 
+                  onClick={() => setShowCheckout(true)}
+                >
+                  <ArrowRight className="h-4 w-4 mr-2" />
+                  Proceed to Checkout
                 </Button>
                 <Button 
                   variant="outline" 
