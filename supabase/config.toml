@@ -4,4 +4,4 @@ project_id = "kfynbbhsnxlrcbtezpdl"
 verify_jwt = false
 
 [functions.admin-analytics]
-verify_jwt = false
+verify_jwt = true
