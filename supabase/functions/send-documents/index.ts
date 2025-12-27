@@ -1,11 +1,46 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 // Allowed origins - add production domain when deployed
 const ALLOWED_ORIGINS = [
   Deno.env.get("ALLOWED_ORIGIN") || "http://localhost:8080",
 ];
+
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const MAX_ATTEMPTS_PER_WINDOW = 20;
+const rateLimitMap = new Map<string, { attempts: number; windowStart: number }>();
+
+function getRateLimitKey(req: Request): string {
+  const forwarded = req.headers.get("x-forwarded-for");
+  const ip = forwarded ? forwarded.split(",")[0].trim() : "unknown";
+  return ip;
+}
+
+function checkRateLimit(key: string): { allowed: boolean; remaining: number; resetIn: number } {
+  const now = Date.now();
+  const entry = rateLimitMap.get(key);
+  
+  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+    rateLimitMap.set(key, { attempts: 1, windowStart: now });
+    return { allowed: true, remaining: MAX_ATTEMPTS_PER_WINDOW - 1, resetIn: RATE_LIMIT_WINDOW_MS };
+  }
+  
+  if (entry.attempts >= MAX_ATTEMPTS_PER_WINDOW) {
+    const resetIn = RATE_LIMIT_WINDOW_MS - (now - entry.windowStart);
+    return { allowed: false, remaining: 0, resetIn };
+  }
+  
+  entry.attempts++;
+  rateLimitMap.set(key, entry);
+  return { 
+    allowed: true, 
+    remaining: MAX_ATTEMPTS_PER_WINDOW - entry.attempts, 
+    resetIn: RATE_LIMIT_WINDOW_MS - (now - entry.windowStart) 
+  };
+}
 
 function getCorsHeaders(origin: string | null): Record<string, string> {
   const allowedOrigin = origin && ALLOWED_ORIGINS.some(allowed => 
@@ -18,19 +53,38 @@ function getCorsHeaders(origin: string | null): Record<string, string> {
   };
 }
 
-interface CartItem {
-  id: string;
-  title: string;
-  price: number;
-  quantity: number;
-}
+// Valid document IDs whitelist
+const VALID_DOCUMENT_IDS = [
+  "aml-policy", "kyc-policy", "transaction-monitoring", "sanctions-screening",
+  "gdpr-privacy-policy", "ndpr-compliance", "data-processing-agreement", "cookie-policy",
+  "iso27001-policy", "soc2-controls", "information-security", "risk-assessment",
+  "vasp-compliance", "mica-readiness", "crypto-licensing",
+  "whitepaper-review", "tokenomics-guide", "securities-compliance",
+  "board-governance", "internal-compliance", "risk-management",
+  "esg-policy", "sustainability-report",
+  "incident-response", "penetration-testing",
+  "pci-dss-compliance", "hitrust-framework",
+];
 
-interface SendDocumentsRequest {
-  name: string;
-  email: string;
-  company?: string;
-  items: CartItem[];
-}
+// Input validation schemas
+const cartItemSchema = z.object({
+  id: z.string().min(1).max(100).refine(id => VALID_DOCUMENT_IDS.includes(id), {
+    message: "Invalid document ID"
+  }),
+  title: z.string().min(1).max(200),
+  price: z.number().min(0).max(10000),
+  quantity: z.number().int().min(1).max(10),
+});
+
+const requestSchema = z.object({
+  name: z.string().trim().min(1).max(100),
+  email: z.string().email().max(255),
+  company: z.string().trim().max(100).optional(),
+  items: z.array(cartItemSchema).min(1).max(20),
+});
+
+type CartItem = z.infer<typeof cartItemSchema>;
+type SendDocumentsRequest = z.infer<typeof requestSchema>;
 
 // Generate order reference: LEG-YYYY-XXXXXX
 function generateOrderReference(): string {
@@ -110,10 +164,29 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Apply rate limiting
+  const rateLimitKey = getRateLimitKey(req);
+  const rateLimit = checkRateLimit(rateLimitKey);
+  
+  if (!rateLimit.allowed) {
+    console.warn(`[RATE_LIMIT] Exceeded for key`);
+    return new Response(
+      JSON.stringify({ error: "Too many requests. Please try again later." }),
+      { 
+        status: 429, 
+        headers: { 
+          ...corsHeaders, 
+          "Content-Type": "application/json",
+          "Retry-After": String(Math.ceil(rateLimit.resetIn / 1000)),
+        } 
+      }
+    );
+  }
+
   try {
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
     if (!resendApiKey) {
-      console.error("RESEND_API_KEY not configured");
+      console.error("[CONFIG] Missing RESEND_API_KEY");
       throw new Error("Service configuration error");
     }
 
@@ -123,16 +196,19 @@ const handler = async (req: Request): Promise<Response> => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const resend = new Resend(resendApiKey);
 
-    const { name, email, company, items }: SendDocumentsRequest = await req.json();
-
-    // Validate required fields
-    if (!name || !email || !items || items.length === 0) {
-      console.error("Missing required fields:", { name: !!name, email: !!email, items: items?.length });
+    // Parse and validate request body
+    const rawBody = await req.json();
+    const parseResult = requestSchema.safeParse(rawBody);
+    
+    if (!parseResult.success) {
+      console.warn("[VALIDATION] Invalid request body");
       return new Response(
-        JSON.stringify({ error: "Missing required fields" }),
+        JSON.stringify({ error: "Invalid request data" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+    
+    const { name, email, company, items } = parseResult.data;
 
     console.log(`Processing order for ${email} with ${items.length} items`);
 
@@ -155,11 +231,10 @@ const handler = async (req: Request): Promise<Response> => {
         .createSignedUrl(filePath, 48 * 60 * 60); // 48 hours in seconds
       
       if (signedUrlError) {
-        console.warn(`Could not generate signed URL for ${item.id}: ${signedUrlError.message}`);
-        // Continue with placeholder - in production, you'd want to handle this differently
+        console.warn("[STORAGE] Could not generate signed URL for document");
         documentLinks.push({
           title: item.title,
-          url: `#document-not-found-${item.id}`,
+          url: `#document-unavailable`,
           price: item.price,
         });
       } else {
@@ -185,7 +260,7 @@ const handler = async (req: Request): Promise<Response> => {
       .single();
 
     if (orderError) {
-      console.error("Error creating order:", orderError);
+      console.error("[DB] Order creation failed");
       throw new Error("Failed to create order record");
     }
 
@@ -203,7 +278,7 @@ const handler = async (req: Request): Promise<Response> => {
       .insert(orderItems);
 
     if (itemsError) {
-      console.error("Error creating order items:", itemsError);
+      console.error("[DB] Order items creation failed");
       // Continue anyway - order was created
     }
 
@@ -296,11 +371,11 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     if (emailError) {
-      console.error("Error sending email:", emailError);
+      console.error("[EMAIL] Failed to send");
       throw new Error("Failed to send email");
     }
 
-    console.log(`Order ${orderReference} processed successfully, email sent:`, emailData);
+    console.log(`[SUCCESS] Order processed: ${orderReference}`);
 
     return new Response(
       JSON.stringify({
@@ -315,9 +390,9 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
 
-  } catch (error: any) {
-    console.error("Error in send-documents function:", error);
-    // Return generic error message to prevent information leakage
+  } catch (error: unknown) {
+    const errorId = crypto.randomUUID().slice(0, 8);
+    console.error(`[ERROR:${errorId}] Request failed`);
     return new Response(
       JSON.stringify({ error: "Unable to process your request. Please try again later." }),
       { 

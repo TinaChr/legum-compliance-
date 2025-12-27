@@ -118,14 +118,14 @@ const handler = async (req: Request): Promise<Response> => {
     const { data: { user }, error: userError } = await supabaseAuth.auth.getUser(token);
     
     if (userError || !user) {
-      console.warn("Invalid or expired token:", userError?.message);
+      console.warn("[AUTH] Token validation failed");
       return new Response(
-        JSON.stringify({ error: "Invalid or expired token" }),
+        JSON.stringify({ error: "Authentication failed" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    console.log(`Authenticated user: ${user.id}`);
+    console.log("[AUTH] User authenticated");
 
     // Create admin client to check role (using service role key)
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
@@ -137,7 +137,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     if (roleError) {
-      console.error("Error checking admin role:", roleError);
+      console.error("[AUTH] Role verification failed");
       return new Response(
         JSON.stringify({ error: "Unable to verify permissions" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -145,14 +145,14 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     if (!isAdmin) {
-      console.warn(`User ${user.id} is not an admin`);
+      console.warn("[AUTH] Non-admin access attempt");
       return new Response(
-        JSON.stringify({ error: "Admin access required" }),
+        JSON.stringify({ error: "Access denied" }),
         { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    console.log(`Admin verified: ${user.id}, fetching analytics...`);
+    console.log("[AUTH] Admin verified, fetching analytics...");
 
     // Get total orders and revenue using admin client
     const { data: ordersData, error: ordersError } = await supabaseAdmin
@@ -160,7 +160,7 @@ const handler = async (req: Request): Promise<Response> => {
       .select("id, order_reference, total_amount, created_at, status");
 
     if (ordersError) {
-      console.error("Error fetching orders:", ordersError);
+      console.error("[DB] Orders query failed");
       throw new Error("Failed to fetch orders");
     }
 
@@ -175,7 +175,7 @@ const handler = async (req: Request): Promise<Response> => {
       .select("document_id, document_title, price, quantity, order_id");
 
     if (itemsError) {
-      console.error("Error fetching order items:", itemsError);
+      console.error("[DB] Order items query failed");
       throw new Error("Failed to fetch order items");
     }
 
@@ -260,8 +260,9 @@ const handler = async (req: Request): Promise<Response> => {
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
 
-  } catch (error: any) {
-    console.error("Error in admin-analytics function:", error);
+  } catch (error: unknown) {
+    const errorId = crypto.randomUUID().slice(0, 8);
+    console.error(`[ERROR:${errorId}] Analytics request failed`);
     return new Response(
       JSON.stringify({ error: "Unable to process request" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
