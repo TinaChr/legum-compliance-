@@ -53,18 +53,49 @@ function getCorsHeaders(origin: string | null): Record<string, string> {
   };
 }
 
-// Valid document IDs whitelist
-const VALID_DOCUMENT_IDS = [
-  "aml-policy", "kyc-policy", "transaction-monitoring", "sanctions-screening",
-  "gdpr-privacy-policy", "ndpr-compliance", "data-processing-agreement", "cookie-policy",
-  "iso27001-policy", "soc2-controls", "information-security", "risk-assessment",
-  "vasp-compliance", "mica-readiness", "crypto-licensing",
-  "whitepaper-review", "tokenomics-guide", "securities-compliance",
-  "board-governance", "internal-compliance", "risk-management",
-  "esg-policy", "sustainability-report",
-  "incident-response", "penetration-testing",
-  "pci-dss-compliance", "hitrust-framework",
-];
+// HTML escape function to prevent XSS in email templates
+function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// Server-side document pricing (source of truth)
+const DOCUMENT_PRICES: Record<string, number> = {
+  "aml-policy": 299,
+  "kyc-policy": 249,
+  "transaction-monitoring": 349,
+  "sanctions-screening": 299,
+  "gdpr-privacy-policy": 399,
+  "ndpr-compliance": 349,
+  "data-processing-agreement": 249,
+  "cookie-policy": 149,
+  "iso27001-policy": 499,
+  "soc2-controls": 449,
+  "information-security": 349,
+  "risk-assessment": 299,
+  "vasp-compliance": 549,
+  "mica-readiness": 599,
+  "crypto-licensing": 499,
+  "whitepaper-review": 449,
+  "tokenomics-guide": 399,
+  "securities-compliance": 549,
+  "board-governance": 349,
+  "internal-compliance": 299,
+  "risk-management": 349,
+  "esg-policy": 299,
+  "sustainability-report": 349,
+  "incident-response": 399,
+  "penetration-testing": 449,
+  "pci-dss-compliance": 499,
+  "hitrust-framework": 549,
+};
+
+// Valid document IDs whitelist (derived from pricing)
+const VALID_DOCUMENT_IDS = Object.keys(DOCUMENT_PRICES);
 
 // Input validation schemas
 const cartItemSchema = z.object({
@@ -85,6 +116,22 @@ const requestSchema = z.object({
 
 type CartItem = z.infer<typeof cartItemSchema>;
 type SendDocumentsRequest = z.infer<typeof requestSchema>;
+
+// Validate that client prices match server prices
+function validatePrices(items: CartItem[]): { valid: boolean; discrepancies: string[] } {
+  const discrepancies: string[] = [];
+  
+  for (const item of items) {
+    const serverPrice = DOCUMENT_PRICES[item.id];
+    if (serverPrice === undefined) {
+      discrepancies.push(`Unknown document: ${item.id}`);
+    } else if (item.price !== serverPrice) {
+      discrepancies.push(`Price mismatch for ${item.id}: expected ${serverPrice}, got ${item.price}`);
+    }
+  }
+  
+  return { valid: discrepancies.length === 0, discrepancies };
+}
 
 // Generate order reference: LEG-YYYY-XXXXXX
 function generateOrderReference(): string {
@@ -210,14 +257,24 @@ const handler = async (req: Request): Promise<Response> => {
     
     const { name, email, company, items } = parseResult.data;
 
-    console.log(`Processing order for ${email} with ${items.length} items`);
+    // Server-side price validation - prevent price manipulation
+    const priceValidation = validatePrices(items);
+    if (!priceValidation.valid) {
+      console.warn("[SECURITY] Price manipulation detected:", priceValidation.discrepancies.join(", "));
+      return new Response(
+        JSON.stringify({ error: "Invalid pricing detected. Please refresh and try again." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log(`Processing order with ${items.length} items`);
 
     // Generate order reference and hash email
     const orderReference = generateOrderReference();
     const emailHash = await hashEmail(email);
     
-    // Calculate total and expiration (48 hours)
-    const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    // Calculate total using server-side prices (ignore client prices)
+    const total = items.reduce((sum, item) => sum + DOCUMENT_PRICES[item.id] * item.quantity, 0);
     const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
 
     // Generate signed URLs for each document (48-hour expiry)
@@ -282,12 +339,12 @@ const handler = async (req: Request): Promise<Response> => {
       // Continue anyway - order was created
     }
 
-    // Build email HTML
+    // Build email HTML with escaped user content to prevent XSS
     const documentListHtml = documentLinks.map(doc => `
       <tr>
         <td style="padding: 12px 16px; border-bottom: 1px solid #e5e7eb;">
           <a href="${doc.url}" style="color: #2563eb; text-decoration: none; font-weight: 500;">
-            ${doc.title}
+            ${escapeHtml(doc.title)}
           </a>
         </td>
         <td style="padding: 12px 16px; border-bottom: 1px solid #e5e7eb; text-align: right;">
@@ -310,7 +367,7 @@ const handler = async (req: Request): Promise<Response> => {
         </div>
         
         <div style="background: #ffffff; padding: 32px; border: 1px solid #e5e7eb; border-top: none;">
-          <p style="margin: 0 0 16px;">Hello ${name},</p>
+          <p style="margin: 0 0 16px;">Hello ${escapeHtml(name)},</p>
           
           <p style="margin: 0 0 24px;">
             Thank you for your order! Your policy documents are ready for download. 
@@ -347,7 +404,7 @@ const handler = async (req: Request): Promise<Response> => {
             </p>
           </div>
           
-          ${company ? `<p style="font-size: 14px; color: #64748b; margin: 16px 0 0;">Company: ${company}</p>` : ""}
+          ${company ? `<p style="font-size: 14px; color: #64748b; margin: 16px 0 0;">Company: ${escapeHtml(company)}</p>` : ""}
         </div>
         
         <div style="background: #f8fafc; padding: 24px; border-radius: 0 0 12px 12px; border: 1px solid #e5e7eb; border-top: none; text-align: center;">
