@@ -8,11 +8,10 @@ const ALLOWED_ORIGINS = [
 
 // Rate limiting configuration
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-const MAX_ATTEMPTS_PER_WINDOW = 5;
+const MAX_ATTEMPTS_PER_WINDOW = 50; // Increased for authenticated requests
 const rateLimitMap = new Map<string, { attempts: number; windowStart: number }>();
 
 function getRateLimitKey(req: Request): string {
-  // Use X-Forwarded-For header or fallback to a default
   const forwarded = req.headers.get("x-forwarded-for");
   const ip = forwarded ? forwarded.split(",")[0].trim() : "unknown";
   return ip;
@@ -23,7 +22,6 @@ function checkRateLimit(key: string): { allowed: boolean; remaining: number; res
   const entry = rateLimitMap.get(key);
   
   if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
-    // New window or expired window
     rateLimitMap.set(key, { attempts: 1, windowStart: now });
     return { allowed: true, remaining: MAX_ATTEMPTS_PER_WINDOW - 1, resetIn: RATE_LIMIT_WINDOW_MS };
   }
@@ -51,24 +49,6 @@ function getCorsHeaders(origin: string | null): Record<string, string> {
     "Access-Control-Allow-Origin": allowedOrigin,
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   };
-}
-
-// Constant-time string comparison to prevent timing attacks
-function constantTimeCompare(a: string, b: string): boolean {
-  if (a.length !== b.length) {
-    // Still do full comparison to maintain constant time for length check
-    let result = 0;
-    const maxLen = Math.max(a.length, b.length);
-    for (let i = 0; i < maxLen; i++) {
-      result |= (a.charCodeAt(i % a.length) || 0) ^ (b.charCodeAt(i % b.length) || 0);
-    }
-    return false;
-  }
-  let result = 0;
-  for (let i = 0; i < a.length; i++) {
-    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
-  return result === 0;
 }
 
 interface AnalyticsResponse {
@@ -111,36 +91,71 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    // Verify admin password
-    const adminPassword = Deno.env.get("ADMIN_PASSWORD");
-    if (!adminPassword) {
-      console.error("ADMIN_PASSWORD not configured");
-      return new Response(
-        JSON.stringify({ error: "Unable to process request" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    const { password } = await req.json();
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     
-    // Use constant-time comparison to prevent timing attacks
-    if (!password || !constantTimeCompare(password, adminPassword)) {
-      console.warn("Invalid admin password attempt");
+    // Extract and verify JWT token from Authorization header
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      console.warn("Missing or invalid Authorization header");
       return new Response(
-        JSON.stringify({ error: "Invalid credentials" }),
+        JSON.stringify({ error: "Authentication required" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const token = authHeader.replace("Bearer ", "");
     
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    // Create client with user's token to verify authentication
+    const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
+      global: {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    });
 
-    console.log("Fetching admin analytics...");
+    // Get the user from the token
+    const { data: { user }, error: userError } = await supabaseAuth.auth.getUser(token);
+    
+    if (userError || !user) {
+      console.warn("Invalid or expired token:", userError?.message);
+      return new Response(
+        JSON.stringify({ error: "Invalid or expired token" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
-    // Get total orders and revenue
-    const { data: ordersData, error: ordersError } = await supabase
+    console.log(`Authenticated user: ${user.id}`);
+
+    // Create admin client to check role (using service role key)
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+    
+    // Check if user has admin role using the has_role function
+    const { data: isAdmin, error: roleError } = await supabaseAdmin.rpc('has_role', {
+      _user_id: user.id,
+      _role: 'admin'
+    });
+
+    if (roleError) {
+      console.error("Error checking admin role:", roleError);
+      return new Response(
+        JSON.stringify({ error: "Unable to verify permissions" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!isAdmin) {
+      console.warn(`User ${user.id} is not an admin`);
+      return new Response(
+        JSON.stringify({ error: "Admin access required" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log(`Admin verified: ${user.id}, fetching analytics...`);
+
+    // Get total orders and revenue using admin client
+    const { data: ordersData, error: ordersError } = await supabaseAdmin
       .from("orders")
       .select("id, order_reference, total_amount, created_at, status");
 
@@ -155,7 +170,7 @@ const handler = async (req: Request): Promise<Response> => {
     const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
     // Get order items for popular documents
-    const { data: itemsData, error: itemsError } = await supabase
+    const { data: itemsData, error: itemsError } = await supabaseAdmin
       .from("order_items")
       .select("document_id, document_title, price, quantity, order_id");
 
@@ -211,14 +226,12 @@ const handler = async (req: Request): Promise<Response> => {
     
     const dailyStats: Record<string, { count: number; revenue: number }> = {};
     
-    // Initialize all days
     for (let i = 0; i < 30; i++) {
       const date = new Date(thirtyDaysAgo.getTime() + i * 24 * 60 * 60 * 1000);
       const dateKey = date.toISOString().split("T")[0];
       dailyStats[dateKey] = { count: 0, revenue: 0 };
     }
 
-    // Populate with actual data
     orders.forEach(order => {
       const dateKey = order.created_at.split("T")[0];
       if (dailyStats[dateKey]) {
@@ -249,7 +262,6 @@ const handler = async (req: Request): Promise<Response> => {
 
   } catch (error: any) {
     console.error("Error in admin-analytics function:", error);
-    // Return generic error message to prevent information leakage
     return new Response(
       JSON.stringify({ error: "Unable to process request" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
