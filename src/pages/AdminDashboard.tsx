@@ -1,19 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
   ShoppingBag, 
   DollarSign, 
   TrendingUp, 
   FileText, 
-  Lock,
+  Shield,
   BarChart3,
   Package,
-  ArrowLeft
+  ArrowLeft,
+  LogOut
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
@@ -24,6 +24,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LineChart, Line } from "recharts";
+import type { User, Session } from "@supabase/supabase-js";
 
 interface Analytics {
   totalOrders: number;
@@ -35,19 +36,86 @@ interface Analytics {
 }
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
   const { toast } = useToast();
-  const [password, setPassword] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  useEffect(() => {
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        // Check admin role after auth state changes
+        if (session?.user) {
+          setTimeout(() => {
+            checkAdminRole(session.user.id);
+          }, 0);
+        } else {
+          setIsAdmin(false);
+          setIsLoading(false);
+        }
+      }
+    );
 
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        checkAdminRole(session.user.id);
+      } else {
+        setIsLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const checkAdminRole = async (userId: string) => {
     try {
+      const { data, error } = await supabase.rpc('has_role', {
+        _user_id: userId,
+        _role: 'admin'
+      });
+
+      if (error) {
+        console.error("Error checking admin role:", error);
+        setIsAdmin(false);
+      } else {
+        setIsAdmin(data === true);
+        
+        if (data === true) {
+          // Fetch analytics data
+          fetchAnalytics();
+        }
+      }
+    } catch (error) {
+      console.error("Error checking admin role:", error);
+      setIsAdmin(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchAnalytics = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session?.access_token) {
+        throw new Error("No session token");
+      }
+
       const { data, error } = await supabase.functions.invoke("admin-analytics", {
-        body: { password },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
       });
 
       if (error) {
@@ -56,7 +124,7 @@ export default function AdminDashboard() {
 
       if (data?.error) {
         toast({
-          title: "Access Denied",
+          title: "Error",
           description: data.error,
           variant: "destructive",
         });
@@ -64,20 +132,26 @@ export default function AdminDashboard() {
       }
 
       setAnalytics(data);
-      setIsAuthenticated(true);
-      toast({
-        title: "Access Granted",
-        description: "Welcome to the admin dashboard",
-      });
     } catch (error: any) {
-      console.error("Login error:", error);
+      console.error("Error fetching analytics:", error);
       toast({
         title: "Error",
-        description: error.message || "Failed to authenticate",
+        description: "Failed to load analytics data",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "Logged out",
+        description: "You have been logged out successfully.",
+      });
+      navigate("/");
+    } catch (error) {
+      console.error("Logout error:", error);
     }
   };
 
@@ -97,7 +171,17 @@ export default function AdminDashboard() {
     });
   };
 
-  if (!isAuthenticated) {
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  // Redirect to auth if not logged in
+  if (!user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <motion.div
@@ -108,32 +192,68 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader className="text-center">
               <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <Lock className="h-6 w-6 text-primary" />
+                <Shield className="h-6 w-6 text-primary" />
               </div>
-              <CardTitle>Admin Dashboard</CardTitle>
-              <CardDescription>Enter your admin password to access analytics</CardDescription>
+              <CardTitle>Authentication Required</CardTitle>
+              <CardDescription>Please sign in to access the admin dashboard</CardDescription>
             </CardHeader>
-            <CardContent>
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Enter admin password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Verifying..." : "Access Dashboard"}
-                </Button>
-              </form>
-              <div className="mt-4 text-center">
+            <CardContent className="space-y-4">
+              <Button 
+                className="w-full" 
+                onClick={() => navigate("/auth")}
+              >
+                Sign In
+              </Button>
+              <div className="text-center">
                 <Link to="/" className="text-sm text-muted-foreground hover:text-primary">
                   ← Back to Home
                 </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Show access denied if not an admin
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-md"
+        >
+          <Card>
+            <CardHeader className="text-center">
+              <div className="mx-auto w-12 h-12 bg-destructive/10 rounded-full flex items-center justify-center mb-4">
+                <Shield className="h-6 w-6 text-destructive" />
+              </div>
+              <CardTitle>Access Denied</CardTitle>
+              <CardDescription>
+                You don't have admin privileges. Please contact an administrator if you believe this is an error.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground text-center">
+                Logged in as: {user.email}
+              </p>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  className="flex-1"
+                  onClick={() => navigate("/")}
+                >
+                  Go Home
+                </Button>
+                <Button 
+                  variant="destructive" 
+                  className="flex-1"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -153,10 +273,13 @@ export default function AdminDashboard() {
             </Link>
             <div>
               <h1 className="text-xl font-bold">Admin Dashboard</h1>
-              <p className="text-sm text-muted-foreground">Order Analytics & Insights</p>
+              <p className="text-sm text-muted-foreground">
+                Signed in as {user.email}
+              </p>
             </div>
           </div>
-          <Button variant="outline" onClick={() => setIsAuthenticated(false)}>
+          <Button variant="outline" onClick={handleLogout}>
+            <LogOut className="h-4 w-4 mr-2" />
             Logout
           </Button>
         </div>
