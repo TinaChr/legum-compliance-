@@ -6,6 +6,42 @@ const ALLOWED_ORIGINS = [
   Deno.env.get("ALLOWED_ORIGIN") || "http://localhost:8080",
 ];
 
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const MAX_ATTEMPTS_PER_WINDOW = 5;
+const rateLimitMap = new Map<string, { attempts: number; windowStart: number }>();
+
+function getRateLimitKey(req: Request): string {
+  // Use X-Forwarded-For header or fallback to a default
+  const forwarded = req.headers.get("x-forwarded-for");
+  const ip = forwarded ? forwarded.split(",")[0].trim() : "unknown";
+  return ip;
+}
+
+function checkRateLimit(key: string): { allowed: boolean; remaining: number; resetIn: number } {
+  const now = Date.now();
+  const entry = rateLimitMap.get(key);
+  
+  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+    // New window or expired window
+    rateLimitMap.set(key, { attempts: 1, windowStart: now });
+    return { allowed: true, remaining: MAX_ATTEMPTS_PER_WINDOW - 1, resetIn: RATE_LIMIT_WINDOW_MS };
+  }
+  
+  if (entry.attempts >= MAX_ATTEMPTS_PER_WINDOW) {
+    const resetIn = RATE_LIMIT_WINDOW_MS - (now - entry.windowStart);
+    return { allowed: false, remaining: 0, resetIn };
+  }
+  
+  entry.attempts++;
+  rateLimitMap.set(key, entry);
+  return { 
+    allowed: true, 
+    remaining: MAX_ATTEMPTS_PER_WINDOW - entry.attempts, 
+    resetIn: RATE_LIMIT_WINDOW_MS - (now - entry.windowStart) 
+  };
+}
+
 function getCorsHeaders(origin: string | null): Record<string, string> {
   const allowedOrigin = origin && ALLOWED_ORIGINS.some(allowed => 
     allowed === "*" || origin === allowed || origin.endsWith(allowed.replace("*", ""))
@@ -51,6 +87,27 @@ const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  // Apply rate limiting
+  const rateLimitKey = getRateLimitKey(req);
+  const rateLimit = checkRateLimit(rateLimitKey);
+  
+  if (!rateLimit.allowed) {
+    console.warn(`Rate limit exceeded for ${rateLimitKey}`);
+    return new Response(
+      JSON.stringify({ error: "Too many requests. Please try again later." }),
+      { 
+        status: 429, 
+        headers: { 
+          ...corsHeaders, 
+          "Content-Type": "application/json",
+          "Retry-After": String(Math.ceil(rateLimit.resetIn / 1000)),
+          "X-RateLimit-Remaining": "0",
+          "X-RateLimit-Reset": String(Math.ceil(rateLimit.resetIn / 1000))
+        } 
+      }
+    );
   }
 
   try {
